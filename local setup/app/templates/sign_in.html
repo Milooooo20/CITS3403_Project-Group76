@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Title</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 350px;
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+        input[type="submit"],
+        .create_account-btn {
+            margin-top: 10px;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+        .create_account-btn {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Title Login</h1>
+        <form action="home.html" method="get">
+            <label for="email">Email:</label><br>
+            <input type="text" id="email" name="email"><br>
+            <label for="password">Password:</label><br>
+            <input type="password" id="password" name="password"><br>
+            <input type="submit" value="Submit">
+        </form>
+        <br>
+        <a href="create_account.html" class="create_account-btn">Create Account</a>
+    </div>
+</body>
+</html>
