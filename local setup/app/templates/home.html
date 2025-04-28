@@ -9,6 +9,12 @@
         }
         .navbar {
             background-color: #333;
+            display: flex;
+            height: 120px;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            padding: 0px 20px;
             overflow: hidden;
         }
         .navbar a {
@@ -20,14 +26,19 @@
             text-decoration: none;
         }
         .navbar a:hover {
-            background-color: #575757;
+            /*background-color: #575757;*/
+            font-weight: bolder;
         }
         .navbar a.active {
-            background-color: green;
+            color: green;
+            font-weight: bold;
+            text-decoration: underline;
         }
         .content {
             padding: 20px;
         }
+        .nav-right {
+            float: right;
         .bottom-center {
             position: absolute;
             bottom: 40px;
@@ -49,14 +60,19 @@
     </style>
 </head>
 <body>
+    
     <div class="navbar">
-        <a href="home.html" class="active">Home</a>
-        <a href="profile.html">My Profile</a>
-        <a href="compare.html">Compare</a>
-        <a href="search.html">Search</a>
-        <a href="about.html">About</a>
-        <a href="sign_in.html">Log Out</a>
+        <img src='../static/assets/your_logo_here.png' height="85px" width="85px">
+        <div class="nav-right">
+            <a href="home.html" class="active">Home</a>
+            <a href="profile.html">My Profile</a>
+            <a href="compare.html">Compare</a>
+            <a href="search.html">Search</a>
+            <a href="about.html">About</a>
+            <a href="sign_in.html">Log Out</a>
+        </div>
     </div>
+
     <div class="content">
         <h1>Welcome to Title Homepage!</h1>
         <p>This is the home page of Title. Use the tabs above to navigate to the different pages.</p>

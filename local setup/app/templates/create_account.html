@@ -2,5 +2,58 @@
 <html>
 <head>
     <title>Create Account</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .navbar {
+            background-color: #333;
+            display: flex;
+            height: 120px;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            padding: 0px 20px;
+            overflow: hidden;
+        }
+        .navbar a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+        .navbar a:hover {
+            /*background-color: #575757;*/
+            font-weight: bolder;
+        }
+        .navbar a.active {
+            color: green;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        .content {
+            padding: 20px;
+        }
+        .nav-right {
+            float: right;
+        }
+    </style>
+    
 </head>
-<h1>Create Account</h1>
+<body>
+    <div class="navbar">
+        <img src='../static/assets/your_logo_here.png' height="85px" width="85px">
+        <div class="nav-right">
+            <a href="home.html">Home</a>
+            <a href="profile.html">My Profile</a>
+            <a href="compare.html">Compare</a>
+            <a href="search.html">Search</a>
+            <a href="about.html">About</a>
+            <a href="sign_in.html" class="active">Login</a>
+        </div>
+    </div>
+    <h1>Create Account</h1>
+</body>
