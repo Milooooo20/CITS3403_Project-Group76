@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Edit Playlist</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .navbar {
+            background-color: #333;
+            display: flex;
+            height: 120px;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            padding: 0px 20px;
+            overflow: hidden;
+        }
+        .navbar a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+        .navbar a:hover {
+            /*background-color: #575757;*/
+            font-weight: bolder;
+        }
+        .navbar a.active {
+            color: green;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        .nav-right {
+            float: right;
+        }
+
+        .container {
+            display: flex;
+        }
+        .left {
+            flex: 1; 
+            background-color: rgb(195, 195, 195);
+            margin: 30px;
+            padding: 20px;
+        }
+        .right {
+            flex: 2; 
+            background-color: rgb(195, 195, 195);
+            margin: 30px;
+            padding: 20px;
+        }
+        .full {
+            background-color: rgb(195, 195, 195);
+            margin: 30px;
+            padding: 20px;
+            max-width: 100%;
+            width: 100%;
+            overflow-x: hidden;
+        }
+        h1 {
+            margin: 40px;
+            margin-bottom: 10px;
+        }
+        .centered {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        .scroll-container-vertical {
+            height: 400px; 
+            overflow-y: auto; 
+            padding: 10px;
+            scrollbar-width: thin;
+            width: 60%;
+            max-width: 400px;
+        }
+        .item {
+            position: relative;
+            margin: 10px 0;
+            padding: 10px;
+            background: #f0f0f0;
+        }
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            width: 60%;
+            max-width: 800px;
+        }  
+        .search-bar {
+            display: flex;
+            align-items: center;
+            margin: 0 auto;
+        }
+        .search-bar > * {
+            padding: 8px;
+            font-size: 0.9em;
+        }
+        .search-bar input {
+            width: 300px;
+        }
+        .search-bar button {
+            float: right;
+            cursor: pointer;
+        }
+        .search-bar button:hover {
+            background-color: #ccc;
+        }
+        .delete-button {
+            display: none;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgb(221, 94, 94);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .item:hover .delete-button {
+            display: inline-block;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <img src='../static/assets/your_logo_here.png' height="85px" width="85px">
+        <div class="nav-right">
+            <a href="home.html">Home</a>
+            <a href="profile.html">My Profile</a>
+            <a href="compare.html">Compare</a>
+            <a href="share.html">Share</a>
+            <a href="about.html">About</a>
+            <a href="sign_in.html">Log Out</a>
+        </div>
+    </div>
+    <div class="centered">
+        <h1>Your Playlist</h1>
+        <div class="scroll-container-vertical">
+            <div class="item">Item 1
+                <button class="delete-button">Delete</button>
+            </div>
+            <div class="item">Item 2
+                <button class="delete-button">Delete</button>
+            </div>
+            <div class="item">Item 3
+                <button class="delete-button">Delete</button>
+            </div>
+            <div class="item">Item 4
+                <button class="delete-button">Delete</button>
+            </div>
+            <div class="item">Item 5
+                <button class="delete-button">Delete</button>
+            </div>
+            <div class="item">Item 6
+                <button class="delete-button">Delete</button>
+            </div>
+            <div class="item">Item 7
+                <button class="delete-button">Delete</button>
+            </div>
+            <div class="item">Item 8
+                <button class="delete-button">Delete</button>
+            </div>
+            <div class="item">Item 9
+                <button class="delete-button">Delete</button>
+            </div>
+        </div>
+        <div class="search-container">
+            <div class="search-bar">
+                <input type="search" id="userSearch" name="userSearch" placeholder="Search for a song">
+                <button type=button><i class="fa fa-search"></i></button>
+            </div>
+        </div>
+        <button type=button>Add Song to Playlist</button>
+    </div>
+</body>
+
