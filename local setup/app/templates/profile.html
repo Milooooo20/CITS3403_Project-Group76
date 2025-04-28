@@ -37,6 +37,7 @@
         .nav-right {
             float: right;
         }
+
         .container {
             display: flex;
         }
@@ -56,20 +57,69 @@
             background-color: rgb(195, 195, 195);
             margin: 30px;
             padding: 20px;
+            max-width: 100%;
+            width: 100%;
+            overflow-x: hidden;
         }
         h1 {
             margin: 40px;
             margin-bottom: 10px;
         }
-        .scrollcontainer {
+
+        .scroll-container-vertical {
             height: 200px; 
             overflow-y: auto; 
             padding: 10px;
+            scrollbar-width: thin;
         }
         .item {
-            margin: 5px 0;
-            padding: 5px;
+            margin: 10px 0;
+            padding: 10px;
             background: #f0f0f0;
+        }
+
+        .scroll-container-horizontal {
+            width: 100%;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 20px 0;
+            scrollbar-width: thin;
+            display: inline-flex;
+            flex: 0 1 auto;
+            max-width: max-content;
+        }
+        .image-card {
+            flex: 0 0 auto;
+            width: 200px;
+            margin-right: 20px;
+            text-align: center;
+            white-space: normal; 
+        }
+        .image-card:last-child {
+            margin-right: 0;
+        }
+        .image-box {
+            width: 200px;
+            height: 200px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        .image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        } 
+        .image-caption {
+            font-size: 14px;
+            color: #333;
+            line-height: 1;
+            margin-top: 8px;
+            max-width: 200px;
+        }
+        .image-title {
+            font-weight: bold;
+            margin-bottom: 4px;
         }
     </style>
 </head>
@@ -93,7 +143,7 @@
     <div class="container">
         <div class="left">
             <h2>My Playlist</h2>
-            <div class="scrollcontainer">
+            <div class="scroll-container-vertical">
                 <div class="item">Item 1</div>
                 <div class="item">Item 2</div>
                 <div class="item">Item 3</div>
@@ -104,9 +154,10 @@
                 <div class="item">Item 8</div>
                 <div class="item">Item 9</div>
               </div>
+              <button onclick="window.location.href='edit_playlist.html'">Add another song?</button>
         </div>
         <div class="right">
-            <h2>My Genres</h2>
+            <h2>My Genres (+ More?)</h2>
             <ol>
                 <li>Genre 1</li>
                 <li>Genre 2</li>
@@ -118,10 +169,104 @@
 
     <div class="container">
         <div class="full">
-            <p>This is placeholder text until I know what we're putting here analysis wise.</p>
+            <p>This is placeholder text until I know what we're putting here analysis wise. Probably a few more stats</p>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus molestie auctor quam eget vestibulum. Suspendisse lectus ex, hendrerit quis felis vel, rhoncus eleifend enim. Praesent ultricies convallis tincidunt. Maecenas id finibus lectus. Etiam vehicula justo id augue rhoncus suscipit. Fusce convallis metus eget convallis placerat. Nulla lobortis a dui non auctor. Suspendisse pharetra felis eu elit ornare, fermentum aliquam risus placerat. In vel porta urna. In tincidunt dictum orci vitae finibus. Nulla id convallis nisi. Cras tempus elit et enim aliquet hendrerit. Aliquam quis nibh sapien.</p>
             <p>Sed consequat risus odio. In ut libero risus. Etiam non condimentum ligula. In eu lacus sit amet leo sagittis aliquet. Nunc porta quam a augue placerat, eget dictum dui dapibus. Praesent dignissim nisi ut magna feugiat fringilla. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam imperdiet pulvinar arcu non varius. Praesent risus ante, dignissim in viverra eget, mattis et metus. Phasellus ac nunc vel diam mollis volutpat ut eget lorem. Praesent sagittis gravida sollicitudin. Aliquam risus tellus, tincidunt sed iaculis nec, ultricies sed dui. Ut at risus in elit ultrices gravida pulvinar sed risus. Ut ut ex a diam egestas fermentum. Phasellus quam dolor, volutpat non interdum sed, maximus a nisl. Vivamus posuere facilisis nisl.</p>
             
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="full">
+            <h2>Song reccommendations based on your playlist:</h2>
+            <div class="scroll-container-horizontal">
+                <div class="image-card">
+                    <div class="image-box">
+                        <img src="https://placehold.co/300x300" alt="Image description">
+                    </div>
+                    <div class="image-caption">
+                        <div class="image-title">Song Name</div>
+                        <p>Artist name.</p>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <div class="image-box">
+                        <img src="https://placehold.co/300x300" alt="Image description">
+                    </div>
+                    <div class="image-caption">
+                        <div class="image-title">Song Name</div>
+                        <p>Artist name.</p>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <div class="image-box">
+                        <img src="https://placehold.co/300x300" alt="Image description">
+                    </div>
+                    <div class="image-caption">
+                        <div class="image-title">Song Name</div>
+                        <p>Artist name.</p>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <div class="image-box">
+                        <img src="https://placehold.co/300x300" alt="Image description">
+                    </div>
+                    <div class="image-caption">
+                        <div class="image-title">Song Name</div>
+                        <p>Artist name.</p>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <div class="image-box">
+                        <img src="https://placehold.co/300x300" alt="Image description">
+                    </div>
+                    <div class="image-caption">
+                        <div class="image-title">Song Name</div>
+                        <p>Artist name.</p>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <div class="image-box">
+                        <img src="https://placehold.co/300x300" alt="Image description">
+                    </div>
+                    <div class="image-caption">
+                        <div class="image-title">Song Name</div>
+                        <p>Artist name.</p>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <div class="image-box">
+                        <img src="https://placehold.co/300x300" alt="Image description">
+                    </div>
+                    <div class="image-caption">
+                        <div class="image-title">Song Name</div>
+                        <p>Artist name.</p>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <div class="image-box">
+                        <img src="https://placehold.co/300x300" alt="Image description">
+                    </div>
+                    <div class="image-caption">
+                        <div class="image-title">Song Name</div>
+                        <p>Artist name.</p>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <div class="image-box">
+                        <img src="https://placehold.co/300x300" alt="Image description">
+                    </div>
+                    <div class="image-caption">
+                        <div class="image-title">Song Name</div>
+                        <p>Artist name.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="full">
+            <button onclick="window.location.href='compare.html'">Like to see how your Playlist compares with others? Click here!</button>
         </div>
     </div>
 </body>
