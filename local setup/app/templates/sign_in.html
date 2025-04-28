@@ -34,9 +34,6 @@
             font-weight: bold;
             text-decoration: underline;
         }
-        .content {
-            padding: 20px;
-        }
         .nav-right {
             float: right;
         }
@@ -56,7 +53,7 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-        input[type="text"],
+        input[type="email"],
         input[type="password"] {
             width: 100%;
             padding: 8px;
@@ -85,7 +82,7 @@
             <a href="home.html">Home</a>
             <a href="profile.html">My Profile</a>
             <a href="compare.html">Compare</a>
-            <a href="search.html">Search</a>
+            <a href="share.html">Share</a>
             <a href="about.html">About</a>
             <a href="sign_in.html"  class="active">Login</a>
         </div>
@@ -96,9 +93,9 @@
             <h1>Title Login</h1>
             <form action="home.html" method="get">
                 <label for="email">Email:</label><br>
-                <input type="text" id="email" name="email"><br>
+                <input type="email" id="email" name="email" required><br>
                 <label for="password">Password:</label><br>
-                <input type="password" id="password" name="password"><br>
+                <input type="password" id="password" name="password" required><br>
                 <input type="submit" value="Submit">
             </form>
             <br>
