@@ -39,6 +39,23 @@
         }
         .nav-right {
             float: right;
+        .bottom-center {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+        .bottom-center p {
+            font-size: 16px; 
+            margin-bottom: 8px;
+        }
+        .bottom-center button {
+            padding: 8px 16px; 
+            font-size: 14px;
+            margin: 5px;
+            width: 90px;
+            box-sizing: border-box;
         }
     </style>
 </head>
@@ -59,6 +76,17 @@
     <div class="content">
         <h1>Welcome to Title Homepage!</h1>
         <p>This is the home page of Title. Use the tabs above to navigate to the different pages.</p>
+
+        <div class="bottom-center">
+            <p style="font-size: 18px;">Want to sign in? Or want to create an account?</p>
+            <a href="sign_in.html" style="text-decoration: none;">
+                <button>Sign In</button>
+            </a>
+            <a href="create_account.html" style="text-decoration: none;">
+                <button>Sign Up</button>
+            </a>
+        </div>
     </div>
+
 </body>
 </html>
