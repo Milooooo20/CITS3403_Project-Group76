@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home | Title</title>
+    <style>
+        html, body{
+            height: 100%;
+        }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-image: linear-gradient(60deg, rgb(0, 0, 99), rgb(109, 0, 0));
+            background-attachment: fixed;
+            text-align: center;
+            color: white;
+        }
+        .navbar {
+            background-color: #333;
+            display: flex;
+            position: sticky;
+            position: -webkit-sticky;
+            top: 0;
+            height: 120px;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            padding: 0px 20px;
+            overflow: hidden;
+        }
+        .navbar a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+        .navbar a:hover {
+            /*background-color: #575757;*/
+            font-weight: bolder;
+        }
+        .navbar a.active {
+            color: green;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        .nav-right {
+            float: right;
+        }
+        .bottom-center {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+        .bottom-center p {
+            font-size: 16px; 
+            margin-bottom: 8px;
+        }
+        .bottom-center button {
+            padding: 8px 16px; 
+            font-size: 14px;
+            margin: 5px;
+            width: 90px;
+            box-sizing: border-box;
+        }
+        
+        .content-box {
+            flex: 1;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 20px;
+            height: calc((100% - 120px - 40px));
+            margin: 20px 20px 20px 20px;
+            box-sizing: border-box;
+            border-radius: 15px;
+            }
+        .content-box::-webkit-scrollbar {
+            display: none;
+        }
+        .header {
+            text-align: center;
+            color: rgb(255, 255, 255);
+        }
+        .main-body {
+            height: 78%;
+            overflow: scroll;
+            scrollbar-width: none;
+        }
+        .user {
+            background-color: rgb(0, 0, 0);        
+            float: left;
+            margin: 2%;
+            width: 46%;
+            height: 85%;
+            border-radius: 10px;    
+        }
+        .user-body {
+            text-align: left;
+        }
+        .search-button {
+            background-color: black;
+            color: white;
+            padding: 15px 30px;
+            display: inline-block;
+            margin-top: 25px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="navbar">
+        <img src='../static/assets/your_logo_here.png' height="85px" width="85px">
+        <div class="nav-right">
+            <a href="home.html">Home</a>
+            <a href="profile.html">My Profile</a>
+            <a href="compare.html" class="active">Compare</a>
+            <a href="search.html">Search</a>
+            <a href="about.html">About</a>
+            <a href="sign_in.html">Log Out</a>
+        </div>
+    </div>
+
+    
+    <div class="content-box">
+        <div class="header">
+            <h1 class="heading">Your Echo Compared to Others</h1>
+        </div>
+        <div class="main-body">       
+            <div class="user">
+                <h2>You</h2>
+                <div class="user-body">
+                    <ol>
+                        <li>Pop</li>
+                        <br>
+                        <li>RnB</li>
+                        <br>
+                        <li>Soul</li>
+                        
+                    </ol>
+                    <br>
+                    <ol>
+                        <li>We Belong Together - <i>Mariah Carey</i></li>
+                        <br>
+                        <li>Die For You - <i>The Weeknd</i></li>
+                        <br>
+                        <li>Happy - <i>Pharrell Williams</i></li>
+                        
+                    </ol>
+                    <br>
+                    <ol>
+                        <li>Michael Jackson</li>
+                        <br>
+                        <li>Mariah Carey</li>
+                        <br>
+                        <li>The Weeknd</li>
+                        
+                    </ol>
+                </div>
+            </div>        
+            <div class="user">
+                <h2>User 2</h2>
+                <div class="user-body">
+                    <ol>
+                        <li>RnB</li>
+                        <br>
+                        <li>Hip-Hop</li>
+                        <br>
+                        <li>Rock</li>
+                        
+                    </ol>
+                    <br>
+                    <ol>
+                        <li>Numb - <i>Linkin Park</i></li>
+                        <br>
+                        <li>Yeah! - <i>Usher</i></li>
+                        <br>
+                        <li>Houdini - <i>Eminem</i></li>
+                        
+                    </ol>
+                    <br>
+                    <ol>
+                        <li>Chris Brown</li>
+                        <br>
+                        <li>Eminem</li>
+                        <br>
+                        <li>Linkin Park</li>
+                        
+                    </ol>
+                </div>
+            </div>
+            <div class="both">
+                <p>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</p>
+                <h3>Both of you may jam along to these songs:</h3>
+                <p>luther - <i>Kendrick Lamar ft. SZA</i></p>
+                <p>Best Part - <i>Daniel Caesar ft. H.E.R.</i></p>
+                <p>The Boy Is Mine - <i>Brandy & Monica</i></p>
+                <p>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</p>
+                <h3>Fun Fact!</h3>
+                <p>You have listened to songs from the 80s, but User 2 has not.</p>
+                <p>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</p>
+                <h3>Follow <a href="" style="color: green;"> User 2's Spotify</a> if you haven't already!</h3>
+                
+            </div>
+        </div>
+        <a href="share.html" class="search-button">Find Others to Share and Compare</a>  
+    </div>
+
+</body>
+</html>
