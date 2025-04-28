@@ -6,7 +6,9 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
         }
+
         .navbar {
             background-color: #333;
             display: flex;
@@ -17,6 +19,7 @@
             padding: 0px 20px;
             overflow: hidden;
         }
+
         .navbar a {
             float: left;
             display: block;
@@ -25,20 +28,68 @@
             padding: 14px 20px;
             text-decoration: none;
         }
+
         .navbar a:hover {
-            /*background-color: #575757;*/
             font-weight: bolder;
         }
+
         .navbar a.active {
             color: green;
             font-weight: bold;
             text-decoration: underline;
         }
+
+        .content {
+            padding: 20px;
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        input[type="submit"] {
+            background-color: #333;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #555;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
         .nav-right {
             float: right;
         }
     </style>
-    
 </head>
 <body>
     <div class="navbar">
@@ -52,5 +103,24 @@
             <a href="sign_in.html" class="active">Login</a>
         </div>
     </div>
-    <h1>Create Account</h1>
+
+    <div class="content">
+        <h1>Create Your Account</h1>
+        <form action="profile.html" method="get">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="confirm-password">Confirm Password:</label>
+            <input type="password" id="confirm-password" name="confirm-password" required>
+
+            <input type="submit" value="Create Account">
+        </form>
+    </div>
 </body>
+</html>
