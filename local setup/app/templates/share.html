@@ -2,89 +2,76 @@
 <html lang="en">
 <head>
     <title>Share</title>
+    <meta name="viewport" content="width=device-width, initial-scale=0.7">
+    <link rel="stylesheet" href="../static/css/nav_bar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-image: linear-gradient(60deg, rgb(0, 0, 99), rgb(109, 0, 0));
-            background-attachment: fixed;
-            text-align: center;
-            color: white
-        }
-        .navbar {
-            background-color: #333;
-            display: flex;
-            height: 120px;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            padding: 0px 20px;
-            overflow: hidden;
-        }
-        .navbar a {
-            float: left;
-            display: block;
-            color: white;
-            text-align: center;
-            padding: 14px 20px;
-            text-decoration: none;
-        }
-        .navbar a:hover {
-            /*background-color: #575757;*/
-            font-weight: bolder;
-        }
-        .navbar a.active {
-            color: green;
-            font-weight: bold;
-            text-decoration: underline;
-        }
-        .nav-right {
-            float: right;
-        }
         .container {
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            min-height: calc(100vh - 120px);
+        }
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            height: 300px;
         }
         h1 {
-            font-size: 3em;
+            margin-top: 2em;
+            margin-bottom: 1em;
+            padding: 1em;
+            font-size: 2em;
         }
         .search-bar > * {
-            padding: 8px;
-            font-size: 0.9em;
+            padding: 0.5em;
+            font-size: 1em;
         }
-        .search-bar input {
-            width: 300px;
-        }
-        .search-bar button {
+        .search-bar > button {
             float: right;
             cursor: pointer;
         }
-        .search-bar button:hover {
-            background-color: #ccc;
+        .search-bar > button:hover {
+            background-color: rgb(200, 200, 200);
         }
         .profile-card {
-            width: 300px;
-            height: 100px;
-            margin: auto;
-            padding: 15px 30px;
-            background-color: rgb(124, 124, 124);
-            border-radius: 10px;
+            background-color: rgba(0, 0, 0, 0.35);
+            display: flex;
+            align-items: center;
+            border-radius: 20px;
+            margin-top: 3em;
+            padding: 1em;
         }
-        .share-button {
+        .profile {
+            text-align: left;
+            width: 15em;
+            margin: 0 1em;
+            overflow-x: auto;
+        }
+        .profile::-webkit-scrollbar {
+            display: none;
+        }
+        .profile-card > button {
             display: block;
-            width: 100px;
-            height: 40px;
-            margin: 50px auto;
-            font-size: 1em;
+            width: 5em;
+            aspect-ratio: 1/1;
+            margin: 0 1em;
+            border: 1px solid white;
+            border-radius: 50%;
+            color: white;
+            background-color: rgba(0, 0, 0, 0);
             cursor: pointer;
         }
+        .profile-card > button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .profile-card > button:active {
+            color: rgb(40, 0, 30);
+        }
         .info-graphic {
-            background-color: rgb(124, 124, 124);
-            height: 300px;
+            background-color: rgba(0, 0, 0, 0.35);
+            height: 20em;
+            margin-top: 4em;
         }
     </style>
 </head>
@@ -101,20 +88,22 @@
         </div>
     </div>
     <div class="container">
-        <h1>Share with others!</h1>
-        <div class="search-bar">
-            <input type="search" id="userSearch" name="userSearch" placeholder="Username">
-            <button type=button><i class="fa fa-search"></i></button>
+        <div class="content">
+            <h1>Share with others!</h1>
+            <div class="search-bar">
+                <input type="search" id="userSearch" name="userSearch" size="32" placeholder="Username">
+                <button type="button" title="Search"><i class="fa fa-search"></i></button>
+            </div>
+            <div class="profile-card">
+                <div class="profile">
+                    <h2>Name</h2>
+                    <p>Username</p>
+                </div>
+                <button type="button" title="Share"><i class='fa fa-share fa-2x'></i></button>
+            </div>
+            <div class="info-graphic">
+                <p>Big infographic: What you can get by sharing your data</p> 
+            </div>
         </div>
-    </div>
-    <div class="profile-card">
-        <h2>Name</h2>
-        <p>Username</p>
-    </div>
-    <button type="button" class="share-button">Share</button>
-    <div class="info-graphic">
-        <p style="text-align: center;">Big infographic: What you can get by sharing your data</p> 
-        <!--Inline CSS isn't ideal but this is temporary for the demo tomorrow (I just think it looks a bit better)-->
-    </div>
 </body>
 </html>
