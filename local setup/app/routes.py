@@ -1,7 +1,8 @@
 from flask import render_template, request, redirect, flash, url_for
 from flask_login import login_user, logout_user, login_required, current_user
 from app import db
-from app.models import User
+from app.models import User, Playlist, Song
+from app.SpotifyApi import SpotifyAPI
 
 def register_routes(app):
     @app.route('/')
@@ -33,6 +34,10 @@ def register_routes(app):
             db.session.add(new_user)
             db.session.commit()
 
+            playlist = Playlist(user_id=new_user.id, name=f"{new_user.username}'s Playlist")
+            db.session.add(playlist)
+            db.session.commit()
+
             flash('Account created successfully. Please sign in.', 'success')
             return redirect(url_for('sign_in'))
 
@@ -45,7 +50,9 @@ def register_routes(app):
     @app.route('/profile')
     @login_required
     def profile():
-        return render_template('profile.html', user=current_user)
+        user_playlist = current_user.get_or_create_playlist()
+        songs = user_playlist.songs.all()
+        return render_template('profile.html', user=current_user, songs=songs)
 
     @app.route('/share')
     def share():
@@ -54,8 +61,8 @@ def register_routes(app):
     @app.route('/sign_in', methods=['GET', 'POST'])
     def sign_in():
         if request.method == 'POST':
-            username = request.form['username']
-            password = request.form['password']
+            username = request.form.get('username')  
+            password = request.form.get('password')
 
             user = User.query.filter_by(username=username).first()
             if user and user.check_password(password):
