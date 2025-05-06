@@ -4,24 +4,81 @@
     <title>Home | Title</title>
     <link rel="stylesheet" href="../static/css/nav_bar.css">
     <style>
-        .content {
-            padding: 20px;
+        * {
+            margin: 0%;
         }
-        .bottom-center {
+        .content {
+            padding: 0px;
+        }
+        .welcome::before {
+            content: '';
             position: absolute;
-            bottom: 40px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50vh;
+            background-image: url('../static/assets/soundwaves.jpg');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            opacity: 0.35;
+            z-index: -1;
+        }
+        .welcome {
+            height: 50vh;
+            padding: 0vh 5vh;
+            position: relative;
+            color: white;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .welcome h1 {
+            font-size: 3em;
+            text-shadow: 0px 0px 15px rgb(255, 255, 255);
+        }
+        .about {
+            background-color: rgba(0,0,0,0.35);
+            padding: 5vh 15vh 5vh 15vh;
+            height: max-content;
+        }
+        .text_box {
+            border: 3px solid rgb(255, 255, 255);
+            padding: 0.5em 2em;
+            display: inline-block;
+        }
+        .white_line {
+            height: 1px;
+            width: 100%;
+            background: rgb(255, 255, 255);
+        }
+        .bold_italic {
+            font-style: italic;
+            font-weight: bold;
+            font-size: 1.35em;
+            margin-top: 2vh;
+            margin-bottom: 1vh;
+            letter-spacing: 5px;
+        }
+        
+        .bottom-center {
+            position: relative;
+            /*bottom: 40px;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-50%);*/
+            margin: 5vh;
             text-align: center;
         }
         .bottom-center p {
             font-size: 16px; 
-            margin-bottom: 8px;
+            margin-bottom: 24px;
         }
         .bottom-center button {
             padding: 8px 16px; 
             font-size: 14px;
-            margin: 5px;
+            margin: 8px;
             width: 90px;
             box-sizing: border-box;
         }
@@ -30,7 +87,7 @@
 <body>
     
     <div class="navbar">
-        <img src='../static/assets/your_logo_here.png' height="85px" width="85px">
+        <img id="waves" src='../static/assets/logo.png' height="80px" width="145px">
         <div class="nav-right">
             <a href="home.html" class="active">Home</a>
             <a href="profile.html">My Profile</a>
@@ -40,13 +97,38 @@
             <a href="sign_in.html">Log Out</a>
         </div>
     </div>
-
     <div class="content">
-        <h1>Welcome to Title Homepage!</h1>
-        <p>This is the home page of Title. Use the tabs above to navigate to the different pages.</p>
+        <div class="welcome">
+                <h1>R-ECHO - DISCOVER THE ECHOES OF YOUR SOUND</h1>
+        </div>
+        <div class="about">
+            <h1 class="text_box">ABOUT R-ECHO</h1>
+            <br>
+            <br>
+            <br>
+            <p>Wanting to know more of your music taste?</p>
+            <br>
+            <p>Looking for new songs?</p>
+            <br>
+            <p class="bold_italic"> R-echo is here for you to use!</p>
+            <br>
+            <div class="white_line"></div>
+            <br>
+            <br>
+            <p>By submitting as simple as one song, or a personal playlist, R-echo can analyse the songs you listen to and give you insights to your own unique music taste.</p>
+            <br>
+            <p>Know what genres you tend to listen to, discover new songs from our recommendations that will expand your music-world.</p>
+            <br>
+            <p>You can also share your results with other R-echo users, comparing and contrasting your music with others. See if you could find similarities or differences in the songs you and others listen to!</p>
+            <br>
+            <br>
+            <p>R-echo can be summarised in 3 words:</p>
+            <br>
+            <p class="bold_italic"> Submit. Suggest. Share.</p>
+        </div>
 
         <div class="bottom-center">
-            <p style="font-size: 18px;">Want to sign in? Or want to create an account?</p>
+            <p style="font-size: 18px;">What are you waiting for? Get an analysis of your listening habits now!</p>
             <a href="sign_in.html" style="text-decoration: none;">
                 <button>Sign In</button>
             </a>
