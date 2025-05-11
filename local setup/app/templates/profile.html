@@ -113,18 +113,21 @@
     <div class="container">
         <div class="left">
             <h2>My Playlist</h2>
-            <div class="scroll-container-vertical">
-                <div class="item">Item 1</div>
-                <div class="item">Item 2</div>
-                <div class="item">Item 3</div>
-                <div class="item">Item 4</div>
-                <div class="item">Item 5</div>
-                <div class="item">Item 6</div>
-                <div class="item">Item 7</div>
-                <div class="item">Item 8</div>
-                <div class="item">Item 9</div>
-              </div>
-              <button onclick="window.location.href='edit_playlist.html'">Add another song?</button>
+            <h3>Your Playlist</h3>
+                <div class="scroll-container-vertical" id="playlist-container">
+                {% if songs %}
+                    {% for song in songs %}
+                    <div class="item song-item" data-id="{{ song.id }}">
+                        <span class="song-title">{{ song.title }}</span> - <span class="song-artist">{{ song.artist }}</span>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="item empty-playlist">Your playlist is empty</div>
+                {% endif %}
+                </div>
+                <div class="playlist-actions">
+                <button onclick="window.location.href='edit_playlist.html'">Add another song?</button>
+                </div>
         </div>
         <div class="right">
             <h2>My Genres (+ More?)</h2>
