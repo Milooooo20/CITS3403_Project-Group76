@@ -21,7 +21,7 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(151, 151, 151, 0.7);
         }*/
-        input[type="email"],
+        input[type="text"],
         input[type="password"] {
             width: 100%;
             padding: 8px;
@@ -94,8 +94,8 @@
                 {% endif %}
             {% endwith %}
             <form action="{{ url_for('sign_in') }}" method="post">
-                <label for="email">Email:</label><br>
-                <input type="email" id="email" name="email" required><br>
+                <label for="username">Username:</label><br>
+                <input type="text" id="username" name="username" required><br>
                 <label for="password">Password:</label><br>
                 <input type="password" id="password" name="password" required><br>
                 <input type="submit" value="Submit">
