@@ -18,12 +18,12 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
     
     def get_or_create_playlist(self):
-        playlist = self.playlist.first()
-        if playlist is None:
+        if self.playlist is None:
             playlist = Playlist(user_id=self.id, name=f"{self.username}'s Playlist")
             db.session.add(playlist)
             db.session.commit()
-        return playlist
+            self.playlist = playlist
+        return self.playlist
 
 # Required by Flask-Login to load the user
 @login.user_loader
