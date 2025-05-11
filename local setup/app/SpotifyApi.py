@@ -71,8 +71,4 @@ class SpotifyAPI:
 
         return response.json()
 
-### HARDCODED CREDENTIALS FOR TESTING ONLY THESE BEING HERE IS A SECURITY RISK AND SHOULD BE FIXED BEFORE FINAL SUBMISSION
-spotify_api = SpotifyAPI(
-    client_id='246e6eecd23b454ebc4bbe5127e9579c',
-    client_secret='a55d3209c220401f9a58683a84e06bf3' 
-)
+
