@@ -39,18 +39,25 @@
             width: 100%;
         }
         .scroll-container-vertical {
-            height: 400px; 
+            height: 200px; 
+            width: 80%;
+            max-width: 800px;
             overflow-y: auto; 
             padding: 10px;
             scrollbar-width: thin;
-            width: 60%;
-            max-width: 400px;
+            scrollbar-color: black rgba(0, 0, 0, 0.35);
+            margin-bottom: 20px;
         }
         .item {
-            position: relative;
             margin: 10px 0;
             padding: 10px;
-            background: #f0f0f0;
+            background: rgba(0, 0, 0, 0.35);
+            text-align: left;
+            border-radius: 5px;
+            position: relative; 
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
         }
         .search-container {
             display: flex;
@@ -80,20 +87,96 @@
         }
         .delete-button {
             display: none;
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
             background-color: rgb(221, 94, 94);
             color: white;
             border: none;
             padding: 5px 10px;
             cursor: pointer;
+            border-radius: 3px;
         }
         .item:hover .delete-button {
             display: inline-block;
         }
-
+        .song-info {
+            flex-grow: 1;
+        }
+        .search-results {
+            width: 80%;
+            max-width: 800px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+            background-color: rgba(0, 0, 0, 0.35);
+            border-radius: 5px;
+            padding: 10px;
+            display: none;
+        }
+        .search-result-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.35);
+            text-align: left;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .add-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        /* Modal styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #000000;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            max-width: 500px;
+            border-radius: 5px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+        .add-song-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 15px;
+            display: block;
+        }
+        #confirmSongDetails {
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
@@ -109,42 +192,262 @@
     </div>
     <div class="centered">
         <h1>Your Playlist</h1>
-        <div class="scroll-container-vertical">
-            <div class="item">Item 1
-                <button class="delete-button">Delete</button>
-            </div>
-            <div class="item">Item 2
-                <button class="delete-button">Delete</button>
-            </div>
-            <div class="item">Item 3
-                <button class="delete-button">Delete</button>
-            </div>
-            <div class="item">Item 4
-                <button class="delete-button">Delete</button>
-            </div>
-            <div class="item">Item 5
-                <button class="delete-button">Delete</button>
-            </div>
-            <div class="item">Item 6
-                <button class="delete-button">Delete</button>
-            </div>
-            <div class="item">Item 7
-                <button class="delete-button">Delete</button>
-            </div>
-            <div class="item">Item 8
-                <button class="delete-button">Delete</button>
-            </div>
-            <div class="item">Item 9
-                <button class="delete-button">Delete</button>
-            </div>
+        <div class="scroll-container-vertical" id="playlist-container">
+            {% if songs %}
+                {% for song in songs %}
+                <div class="item" data-song-id="{{ song.id }}">
+                    <div class="song-info">
+                        <strong>{{ song.title }}</strong> - {{ song.artist }}
+                    </div>
+                    <button class="delete-button" data-song-id="{{ song.id }}">Delete</button>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>Your playlist is empty. Search for songs to add below.</p>
+            {% endif %}
         </div>
         <div class="search-container">
             <div class="search-bar">
                 <input type="search" id="userSearch" name="userSearch" placeholder="Search for a song">
-                <button type=button><i class="fa fa-search"></i></button>
+                <button type="button" id="searchButton"><i class="fa fa-search"></i></button>
             </div>
         </div>
-        <button type=button>Add Song to Playlist</button>
-    </div>
-</body>
+        <div class="search-results" id="searchResults">
 
+        </div>
+    </div>
+
+
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Add to Playlist</h3>
+            <p id="confirmMessage"></p> 
+            <div id="confirmSongDetails"></div>
+            <button id="confirmAdd" class="add-song-button">Add to Playlist</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.delete-button').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const songId = this.getAttribute('data-song-id');
+                    deleteSong(songId);
+                });
+            });
+
+            const searchButton = document.getElementById('searchButton');
+            const searchInput = document.getElementById('userSearch');
+            const searchResults = document.getElementById('searchResults');
+
+            searchButton.addEventListener('click', function() {
+                searchSongs(searchInput.value);
+            });
+
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchSongs(searchInput.value);
+                }
+            });
+
+            const modal = document.getElementById('confirmModal');
+            const closeBtn = document.querySelector('.close');
+            const confirmBtn = document.getElementById('confirmAdd');
+            let selectedSongData = null;
+
+            closeBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+
+            window.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+
+            confirmBtn.addEventListener('click', function() {
+                if (selectedSongData) {
+                    addSongToPlaylist(selectedSongData);
+                    modal.style.display = 'none';
+                }
+            });
+
+            function searchSongs(query) {
+                if (!query.trim()) return;
+
+                fetch(`/search_songs?query=${encodeURIComponent(query)}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        displaySearchResults(data);
+                    })
+                    .catch(error => {
+                        console.error('Error searching songs:', error);
+                        searchResults.innerHTML = '<p>Error searching for songs. Please try again.</p>';
+                        searchResults.style.display = 'block';
+                    });
+            }
+
+            function displaySearchResults(data) {
+                searchResults.innerHTML = '';
+                
+                if (data.length === 0) {
+                    searchResults.innerHTML = '<p>No songs found. Try a different search term.</p>';
+                    searchResults.style.display = 'block';
+                    return;
+                }
+
+                data.forEach(song => {
+                    const resultItem = document.createElement('div');
+                    resultItem.className = 'search-result-item';
+                    resultItem.innerHTML = `
+                        <div class="song-info">
+                            <strong>${song.title}</strong> - ${song.artist}
+                        </div>
+                        <button class="add-button">Add</button>
+                    `;
+
+                    resultItem.querySelector('.add-button').addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        showConfirmModal(song);
+                    });
+
+                    searchResults.appendChild(resultItem);
+                });
+
+                searchResults.style.display = 'block';
+            }
+
+            function showConfirmModal(song) {
+                selectedSongData = song;
+                document.getElementById('confirmMessage').textContent = `Add "${song.title}" by ${song.artist} to your playlist?`;
+                
+                let detailsHtml = '';
+                if (song.album_art) {
+                    detailsHtml += `<img src="${song.album_art}" alt="${song.title}" style="width: 80px; height: 80px; margin-right: 10px;">`;
+                }
+                detailsHtml += `<p><strong>Album:</strong> ${song.album || 'Unknown'}</p>`;
+                
+                document.getElementById('confirmSongDetails').innerHTML = detailsHtml;
+                modal.style.display = 'block';
+            }
+
+            function addSongToPlaylist(song) {
+                fetch('/add_song', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCsrfToken()
+                    },
+                    body: JSON.stringify(song)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        addSongToPlaylistUI(data.song);
+                        searchResults.style.display = 'none';
+                    } else {
+                        alert(data.message || 'Failed to add song to playlist');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error adding song:', error);
+                    alert('Error adding song to playlist. Please try again.');
+                });
+            }
+
+
+            function addSongToPlaylistUI(song) {
+                const playlistContainer = document.getElementById('playlist-container');
+
+                const emptyMessage = playlistContainer.querySelector('p');
+                if (emptyMessage) {
+                    playlistContainer.removeChild(emptyMessage);
+                }
+                
+                const newItem = document.createElement('div');
+                newItem.className = 'item';
+                newItem.setAttribute('data-song-id', song.id);
+                
+                newItem.innerHTML = `
+                    <div class="song-info">
+                        <strong>${song.title}</strong> - ${song.artist}
+                    </div>
+                    <button class="delete-button" data-song-id="${song.id}">Delete</button>
+                `;
+                
+                newItem.querySelector('.delete-button').addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    deleteSong(song.id);
+                });
+                
+                playlistContainer.appendChild(newItem);
+            }
+
+
+            function deleteSong(songId) {
+                if (!confirm('Are you sure you want to remove this song from your playlist?')) {
+                    return;
+                }
+                
+                fetch(`/delete_song/${songId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRFToken': getCsrfToken()
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        const songElement = document.querySelector(`.item[data-song-id="${songId}"]`);
+                        if (songElement) {
+                            songElement.remove();
+                        }
+                        
+                        const playlistContainer = document.getElementById('playlist-container');
+                        if (playlistContainer.children.length === 0) {
+                            playlistContainer.innerHTML = '<p>Your playlist is empty. Search for songs to add below.</p>';
+                        }
+                    } else {
+                        alert(data.message || 'Failed to delete song');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting song:', error);
+                    alert('Error removing song from playlist. Please try again.');
+                });
+            }
+
+            function getCsrfToken() {
+                const metaTag = document.querySelector('meta[name="csrf-token"]');
+                if (metaTag) {
+                    return metaTag.getAttribute('content');
+                }
+                
+                const cookie = document.cookie.split('; ').find(row => row.startsWith('csrf_token='));
+                if (cookie) {
+                    return cookie.split('=')[1];
+                }
+                
+                return '';
+            }
+        });
+    </script>
+</body>
+</html>
