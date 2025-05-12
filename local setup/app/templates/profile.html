@@ -126,7 +126,7 @@
                 {% endif %}
                 </div>
                 <div class="playlist-actions">
-                <button onclick="window.location.href='edit_playlist.html'">Add another song?</button>
+                <button onclick="window.location.href=`{{ url_for('edit_playlist') }}`">Add another song?</button>
                 </div>
         </div>
         <div class="right">
@@ -239,7 +239,7 @@
     </div>
     <div class="container">
         <div class="full">
-            <button onclick="window.location.href='compare.html'">Like to see how your Playlist compares with others? Click here!</button>
+            <button onclick="window.location.href=`{{ url_for('compare') }}`">Like to see how your Playlist compares with others? Click here!</button>
         </div>
     </div>
 </body>
