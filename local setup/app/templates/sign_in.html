@@ -54,12 +54,6 @@
             margin-bottom: 10px;
         }
         
-        .flashes li.success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
         .flashes li.error {
             background-color: #f8d7da;
             color: #721c24;
@@ -69,19 +63,19 @@
 </head>
 <body>
     <div class="navbar">
-        <img src='../static/assets/your_logo_here.png' height="85px" width="85px">
+        <img src='../static/assets/logo.png' height="80px" width="145px">
         <div class="nav-right">
             <a href="{{ url_for('home') }}">Home</a>
             <a href="{{ url_for('profile') }}">My Profile</a>
             <a href="{{ url_for('compare') }}">Compare</a>
             <a href="{{ url_for('share') }}">Share</a>
-            <a href="{{ url_for('sign_in') }}" class="active">Log Out</a>
+            <a href="{{ url_for('logout') }}" class="active">Log Out</a>
         </div>
     </div>
 
     <div class="box">
         <div class="container">
-            <h1>Title Login</h1>
+            <h1>Login</h1>
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     <ul class="flashes">
