@@ -3,6 +3,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from app import db
 from app.models import User, Playlist, Song
 from app.SpotifyApi import SpotifyAPI
+from collections import Counter
 
 ### HARDCODED CREDENTIALS FOR TESTING ONLY THESE BEING HERE IS A SECURITY RISK AND SHOULD BE FIXED BEFORE FINAL SUBMISSION
 spotify_api = SpotifyAPI(
@@ -175,6 +176,88 @@ def register_routes(app):
         songs = user_playlist.songs.all()
         return render_template('profile.html', user=current_user, songs=songs)
 
+    @app.route('/analysis')
+    @login_required
+    def analysis():
+        user_playlist = current_user.get_or_create_playlist()
+        songs = user_playlist.songs.all()
+
+        all_artists = []
+        total_duration = 0  # To accumulate the total song length in milliseconds
+        artist_durations = {}  # Dictionary to store the total duration per artist
+        num_songs = len(songs)  # Total number of songs
+        longest_song = None
+        longest_duration = 0  # Track the longest song duration
+
+        artist_counts = Counter()  # To count artist occurrences
+
+        for song in songs:
+            # Split by comma and count individual artists
+            artists = [artist.strip() for artist in song.artist.split(',')]
+            all_artists.extend(artists)
+
+            # Fetch track details from Spotify API to get the duration
+            track_data = spotify_api.get_track(song.spotify_id)
+            duration_ms = track_data.get('duration_ms', 0)  # Duration in milliseconds
+            total_duration += duration_ms  # Add to total duration
+
+            # Update the artist-specific duration
+            for artist in artists:
+                if artist not in artist_durations:
+                    artist_durations[artist] = 0
+                artist_durations[artist] += duration_ms  # Add the song's duration to the artist's total
+
+            # Update the longest song if this one is longer
+            if duration_ms > longest_duration:
+                longest_duration = duration_ms
+                longest_song = song
+
+            # Count artist occurrences
+            artist_counts.update(artists)
+
+        # Calculate average song duration in minutes and seconds
+        if num_songs > 0:
+            avg_duration_ms = total_duration / num_songs
+            avg_minutes = avg_duration_ms // 60000  # Convert to minutes
+            avg_seconds = (avg_duration_ms % 60000) // 1000  # Get remaining seconds
+            avg_duration = f"{int(avg_minutes)}m {int(avg_seconds)}s"
+        else:
+            avg_duration = "N/A"  # Handle case where there are no songs
+
+        # Convert total duration to minutes and seconds
+        total_minutes = total_duration // 60000
+        total_seconds = (total_duration % 60000) // 1000
+        total_duration_str = f"{total_minutes}m {total_seconds}s"  # Format total duration
+
+        # Find the most popular artist
+        most_popular_artist = artist_counts.most_common(1)[0] if artist_counts else ("N/A", 0)
+        favorite_artist = most_popular_artist[0]  # Most frequent artist name
+
+        # Find the top song (longest duration)
+        if longest_song:
+            longest_song_length = f"{longest_duration // 60000}m {(longest_duration % 60000) // 1000}s"
+        else:
+            longest_song_length = "N/A"
+
+        # Prepare artist counts data for the chart
+        labels = list(artist_counts.keys())
+        values = list(artist_counts.values())
+
+        # Prepare data for the pie chart (artist duration)
+        artist_labels = list(artist_durations.keys())
+        artist_values = [duration // 60000 for duration in artist_durations.values()]  # Convert duration to minutes
+
+        return render_template('analysis.html', 
+                            user=current_user, 
+                            labels=labels, 
+                            values=values, 
+                            avg_duration=avg_duration, 
+                            longest_song_length=longest_song_length, 
+                            favorite_artist=favorite_artist,
+                            total_duration=total_duration_str,  
+                            artist_labels=artist_labels,  
+                            artist_values=artist_values)  
+        
     @app.route('/share', methods=['GET', 'POST'])
     @login_required
     def share():
