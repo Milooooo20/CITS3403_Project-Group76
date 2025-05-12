@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ user.username }}'s Analysis</title>
+    <link rel="stylesheet" href="../static/css/nav_bar.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-image: linear-gradient(60deg, rgb(0, 0, 99), rgb(109, 0, 0));
+            background-attachment: fixed;
+            text-align: center;
+            color: white;
+        }
+
+        .stats-box {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 40px auto;
+            max-width: 800px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .chart-container {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 40px auto;
+            max-width: 800px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            margin-top: 40px;
+            font-size: 36px;
+        }
+
+        h2 {
+            margin-top: 20px;
+            font-size: 24px;
+        }
+
+        .stat {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <img src='../static/assets/logo.png' height="80px" width="145px">
+        <div class="nav-right">
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('profile') }}">My Profile</a>
+            <a href="{{ url_for('compare') }}">Compare</a>
+            <a href="{{ url_for('share') }}">Share</a>
+            <a href="{{ url_for('logout') }}">Log Out</a>
+        </div>
+    </div>
+
+    <h1>{{ user.username }}'s Detailed Analysis</h1>
+
+    <div class="stats-box">
+        <h2>📊 Stats Overview</h2>
+        <p class="stat"><strong>🎶 Average Song Length: </strong>{{ avg_duration }}</p>
+        <p class="stat"><strong>⏱️ Longest Song: </strong>{{ longest_song_length }}</p>
+        <p class="stat"><strong>🎤 Favorite Artist: </strong>{{ favorite_artist }}</p>
+        <p class="stat"><strong>🎵 Most Listened to Genre: N/A</p>
+        <p class="stat"><strong>⏳ Total Playlist Duration: </strong>{{ total_duration }}</p>
+    </div>
+
+    <div class="chart-container">
+        <h2>🎤 Songs per Artist</h2>
+        <canvas id="artistChart"></canvas>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('artistChart').getContext('2d');
+        const artistChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ labels | tojson }},
+                datasets: [{
+                    label: 'Number of Songs',
+                    data: {{ values | tojson }},
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(153, 102, 255, 0.6)',
+                        'rgba(255, 159, 64, 0.6)'
+                    ],
+                    borderColor: 'rgba(255, 255, 255, 0.8)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: 'white'
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'white',
+                            precision: 0
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Number of Songs',
+                            color: 'white',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+    <div class="chart-container">
+        <h2>🎤 Song Duration per Artist</h2>
+        <canvas id="artistDurationChart"></canvas>
+    </div>
+
+    <script>
+        const ctx2 = document.getElementById('artistDurationChart').getContext('2d');
+        const artistDurationChart = new Chart(ctx2, {
+            type: 'pie',
+            data: {
+                labels: {{ artist_labels | tojson }},
+                datasets: [{
+                    label: 'Duration per Artist (minutes)',
+                    data: {{ artist_values | tojson }},
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(153, 102, 255, 0.6)',
+                        'rgba(255, 159, 64, 0.6)'
+                    ],
+                    borderColor: 'rgba(255, 255, 255, 0.8)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.label + ': ' + tooltipItem.raw + ' minutes';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
