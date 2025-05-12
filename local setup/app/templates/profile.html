@@ -136,7 +136,7 @@
                 <li>Genre 2</li>
                 <li>Genre 3</li>
             </ol> 
-            <button onclick="window.location.href='detailed_profile.html'">Click to see detailed analysis</button>
+            <button onclick="window.location.href='{{ url_for('analysis') }}'">Click to see detailed analysis</button>
         </div>
     </div>
 
@@ -151,7 +151,7 @@
 
     <div class="container">
         <div class="full">
-            <h2>Song reccommendations based on your playlist:</h2>
+            <h2>Song recommendations based on your playlist:</h2>
             <div class="scroll-container-horizontal">
                 <div class="image-card">
                     <div class="image-box">
