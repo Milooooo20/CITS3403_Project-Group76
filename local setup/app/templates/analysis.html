@@ -6,15 +6,6 @@
     <link rel="stylesheet" href="../static/css/nav_bar.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-image: linear-gradient(60deg, rgb(0, 0, 99), rgb(109, 0, 0));
-            background-attachment: fixed;
-            text-align: center;
-            color: white;
-        }
-
         .stats-box {
             background-color: rgba(255, 255, 255, 0.05);
             padding: 20px;
@@ -64,7 +55,7 @@
             top: 0;
             width: 100%;
             height: 100%;
-            overflow: auto;
+            overflow-y: auto;
             background-color: rgba(0, 0, 0, 0.8);
             display: flex;
             justify-content: center;
@@ -88,6 +79,11 @@
         .modal-content ul {
             list-style-type: none;
             padding: 0;
+            overflow-x: auto;
+        }
+
+        .modal-content ul::-webkit-scrollbar {
+            display: none;
         }
 
         .modal-content ul li {
@@ -176,10 +172,10 @@
         const artistChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: {{ labels | tojson }},
+                labels: {{ artist_count_labels | tojson }},
                 datasets: [{
                     label: 'Number of Songs',
-                    data: {{ values | tojson }},
+                    data: {{ artist_count_values | tojson }},
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.6)',
                         'rgba(54, 162, 235, 0.6)',
@@ -234,8 +230,8 @@
         });
     
         const ctx2 = document.getElementById('artistDurationChart').getContext('2d');
-        const artistLabels = {{ artist_labels | tojson }};
-        const artistValues = {{ artist_values | tojson }};
+        const artistLabels = {{ artist_duration_labels | tojson }};
+        const artistValues = {{ artist_duration_values | tojson }};
         const artistThreshold = {{ total_duration | tojson }} * 0.05; // 5% of total duration
 
         const { groupedLabels: artistGroupedLabels, groupedValues: artistGroupedValues, otherDetails: artistOtherDetails } =
@@ -296,10 +292,10 @@
         const genreChart = new Chart(genreCtx, {
             type: 'bar',
             data: {
-                labels: {{ genre_labels | tojson }},
+                labels: {{ genre_count_labels | tojson }},
                 datasets: [{
                     label: 'Number of Songs',
-                    data: {{ genre_values | tojson }},
+                    data: {{ genre_count_values | tojson }},
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.6)',
                         'rgba(54, 162, 235, 0.6)',
@@ -371,7 +367,7 @@
         });
 
         const genreDurationCtx = document.getElementById('genreDurationChart').getContext('2d');
-        const genreLabels = {{ genre_labels | tojson }};
+        const genreLabels = {{ genre_duration_labels | tojson }};
         const genreValues = {{ genre_duration_values | tojson }};
         const genreThreshold = {{ total_duration | tojson }} * 0.05; // 5% of total duration
 
