@@ -92,6 +92,20 @@
             font-weight: bold;
             margin-bottom: 4px;
         }
+        .flex-lists {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            height: 100%;
+        }
+
+        .flex-lists > div {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            height: 100%;
+        }
     </style>
 </head>
 <body>
@@ -130,12 +144,29 @@
                 </div>
         </div>
         <div class="right">
-            <h2>My Genres (+ More?)</h2>
-            <ol>
-                <li>Genre 1</li>
-                <li>Genre 2</li>
-                <li>Genre 3</li>
-            </ol> 
+            <h2>🎼 Top Genres & Artists</h2>
+            <div class="flex-lists">
+                <div>
+                    <h3>Top Genres</h3>
+                    <ol>
+                        {% for genre in top_genres %}
+                            <li>{{ genre }}</li>
+                        {% else %}
+                            <li>No genre data available.</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+                <div>
+                    <h3>Top Artists</h3>
+                    <ol>
+                        {% for artist in top_artists %}
+                            <li>{{ artist }}</li>
+                        {% else %}
+                            <li>No artist data available.</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div> 
             <button onclick="window.location.href=`{{ url_for('analysis') }}`">Click to see detailed analysis</button>
         </div>
     </div>
