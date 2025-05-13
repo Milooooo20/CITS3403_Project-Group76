@@ -173,9 +173,39 @@ def register_routes(app):
     @app.route('/profile')
     @login_required
     def profile():
-        user_playlist = current_user.get_or_create_playlist()
+        user = current_user
+        user_playlist = user.get_or_create_playlist()
         songs = user_playlist.songs.all()
-        return render_template('profile.html', user=current_user, songs=songs)
+
+        artist_counts = Counter()
+        genre_counts = Counter()
+
+        for song in songs:
+            # Count artists (handle multiple)
+            artists = [artist.strip() for artist in song.artist.split(',')]
+            artist_counts.update(artists)
+
+            # Fetch genre via Spotify API
+            track_data = spotify_api.get_track(song.spotify_id)
+            if track_data.get('artists'):
+                first_artist_id = track_data['artists'][0]['id']
+                artist_data = spotify_api.get_artist(first_artist_id)
+                genres = artist_data.get('genres', [])
+                if genres:
+                    genre_counts[genres[0]] += 1  # Just use first genre
+                else:
+                    genre_counts['Unknown'] += 1
+
+        # Get top 3
+        top_genres = [genre for genre, _ in genre_counts.most_common(3)]
+        top_artists = [artist for artist, _ in artist_counts.most_common(3)]
+        
+
+        return render_template('profile.html',
+                            user=user,
+                            songs=songs,
+                            top_genres=top_genres,
+                            top_artists=top_artists)
 
     @app.route('/analysis', methods=['GET', 'POST'])
     @login_required
