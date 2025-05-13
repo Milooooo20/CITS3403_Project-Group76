@@ -30,6 +30,17 @@
             border-radius: 15px;
             overflow-x: hidden;
         }
+        .full_bottom {
+            background-color: rgb(124, 124, 124);
+            margin: 30px;
+            padding-bottom: 20px;
+            max-width: 100%;
+            width: 100%;
+            border-radius: 15px;
+            overflow-x: hidden;
+            display: flex; justify-content: center; align-items: center; height: 100%;
+        
+        }
         h1 {
             margin: 40px;
             margin-bottom: 10px;
@@ -108,7 +119,7 @@
 
 
 
-    <h1>{{ user.username }}'s Profile</h1>
+    <h1 class="text_box">{{ user.username }}'s Profile</h1>
 
     <div class="container">
         <div class="left">
@@ -126,7 +137,7 @@
                 {% endif %}
                 </div>
                 <div class="playlist-actions">
-                <button onclick="window.location.href=`{{ url_for('edit_playlist') }}`">Add another song?</button>
+                <button class="btn" onclick="window.location.href=`{{ url_for('edit_playlist') }}`">Add another song?</button>
                 </div>
         </div>
         <div class="right">
@@ -136,7 +147,7 @@
                 <li>Genre 2</li>
                 <li>Genre 3</li>
             </ol> 
-            <button onclick="window.location.href='detailed_profile.html'">Click to see detailed analysis</button>
+            <button class="btn" onclick="window.location.href='detailed_profile.html'">Click to see detailed analysis</button>
         </div>
     </div>
 
@@ -238,8 +249,8 @@
         </div>
     </div>
     <div class="container">
-        <div class="full">
-            <button onclick="window.location.href=`{{ url_for('compare') }}`">Like to see how your Playlist compares with others? Click here!</button>
+        <div class="full_bottom"> 
+            <button class="btn" onclick="window.location.href=`{{ url_for('compare') }}`">Like to see how your Playlist compares with others? Click here!</button>
         </div>
     </div>
 </body>

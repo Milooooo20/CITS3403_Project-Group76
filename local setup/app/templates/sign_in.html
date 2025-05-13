@@ -12,35 +12,51 @@
             margin: 0;
             font-family: Arial, sans-serif;
         }
-        /*.container {
-            width: 350px;
-            height: 350px;
-            text-align: center;
+        .container {
             padding: 20px;
-            border: 1px solid #ccc;
+            width: 400px;
+            margin: 40px auto;
+            padding-bottom: 30px;
+            border: 3px solid #ffffff;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(151, 151, 151, 0.7);
-        }*/
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            font-weight: bold;
+        }
+        label[for="username"] {
+            margin-top: 15px;
+        }
         input[type="text"],
         input[type="password"] {
-            width: 100%;
-            padding: 8px;
-            margin: 8px 0;
-            box-sizing: border-box;
-        }
-        input[type="submit"],
-        .create_account-btn {
-            margin-top: 10px;
-            padding: 8px 16px;
-            cursor: pointer;
-        }
-        .create_account-btn {
-            background-color: #f0f0f0;
+            padding: 10px;
             border: 1px solid #ccc;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 12px;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-top: -13px;
         }
+        input[type="submit"] {
+            background-color: #333;
+            color: white;
+            border: 3px solid white;
+            padding: 12px;
+            
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bolder;
+            margin-top: 20px;
+            margin-bottom: 0px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #555;
+        }
+        
         .flashes {
             list-style-type: none;
             padding: 0;
@@ -59,6 +75,9 @@
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
+        .sign_up {
+            color: green;
+        }
     </style>
 </head>
 <body>
@@ -69,13 +88,18 @@
             <a href="{{ url_for('profile') }}">My Profile</a>
             <a href="{{ url_for('compare') }}">Compare</a>
             <a href="{{ url_for('share') }}">Share</a>
-            <a href="{{ url_for('logout') }}" class="active">Log In</a>
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('logout') }}" class="active">Log Out</a>
+            {% else %}
+                <a href="{{ url_for('sign_in') }}" class="active">Log In</a>
+            {% endif %}
         </div>
     </div>
 
     <div class="box">
         <div class="container">
-            <h1>Login</h1>
+            <h1 class="text_box">Log In</h1>
+            
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     <ul class="flashes">
@@ -90,12 +114,14 @@
             <form action="{{ url_for('sign_in') }}" method="post">
                 <label for="username">Username:</label><br>
                 <input type="text" id="username" name="username" required><br>
+
                 <label for="password">Password:</label><br>
                 <input type="password" id="password" name="password" required><br>
+
                 <input type="submit" value="Submit">
             </form>
             <br>
-            <a href="{{ url_for('create_account') }}" class="create_account-btn">Create Account</a>
+            <p>Don't have a R-echo account?</p><a class="sign_up" href="{{ url_for('create_account') }}">Create one for free!</a>
         </div>
     </div>
 </body>

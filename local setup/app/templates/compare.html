@@ -45,7 +45,7 @@
             color: rgb(255, 255, 255);
         }
         .main-body {
-            height: 78%;
+            height: 70%;
             overflow: scroll;
             scrollbar-width: none;
         }
@@ -61,13 +61,10 @@
         .user-body {
             text-align: left;
         }
-        .search-button {
-            background-color: rgb(124, 124, 124);
-            color: white;
-            padding: 15px 30px;
+        .btn {
             display: inline-block;
             margin-top: 25px;
-            border-radius: 10px;
+            
         }
     </style>
 </head>
@@ -87,7 +84,7 @@
     
     <div class="content-box">
         <div class="header">
-            <h1 class="heading">Your Echo Compared to Others</h1>
+            <h1 class="heading text_box">Your Echo Compared to Others</h1>
         </div>
         <div class="main-body">       
             <div class="user">
@@ -166,7 +163,7 @@
                 
             </div>
         </div>
-        <a href="{{ url_for('share') }}" class="search-button">Find Others to Share and Compare</a>  
+        <a href="{{ url_for('share') }}" class="btn">Find Others to Share and Compare</a>  
     </div>
 
 </body>
