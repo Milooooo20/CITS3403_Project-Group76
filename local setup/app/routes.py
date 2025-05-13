@@ -226,9 +226,11 @@ def register_routes(app):
                 genres = artist_data.get('genres', [])
                 if genres:
                     genre = genres[0]  # Use the first genre
-                    genre_to_songs[genre].append({'title': song.title, 'artist': song.artist})  # Add title and artist
-                    genre_counts[genre] += 1
-                    genre_durations[genre] += duration_ms
+                else:
+                    genre = "Unknown"  # Assign a default genre
+                genre_to_songs[genre].append({'title': song.title, 'artist': song.artist})  # Add title and artist
+                genre_counts[genre] += 1
+                genre_durations[genre] += duration_ms
 
         # Calculate average song duration in minutes and seconds
         if num_songs > 0:
