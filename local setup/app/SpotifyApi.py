@@ -71,4 +71,18 @@ class SpotifyAPI:
 
         return response.json()
 
+    def get_artist(self, artist_id):
+        """Get details for a specific artist"""
+        token = self.get_token()
+        url = f"https://api.spotify.com/v1/artists/{artist_id}"
+        headers = {
+            "Authorization": f"Bearer {token}"
+        }
+        
+        response = requests.get(url, headers=headers)
+        if response.status_code != 200:
+            raise Exception(f"Artist request failed with status {response.status_code}: {response.text}")
+
+        return response.json()
+
 
