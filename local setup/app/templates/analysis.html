@@ -33,6 +33,15 @@
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
         }
 
+        .chart-container canvas {
+            max-height: 400px;
+        }
+
+        .chart-scrollable {
+            overflow-x: auto; /* Enable horizontal scrolling */
+            max-width: 100%;
+        }
+
         h1 {
             margin-top: 40px;
             font-size: 36px;
@@ -46,6 +55,55 @@
         .stat {
             font-size: 20px;
             margin-bottom: 10px;
+        }
+
+        .modal {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            color: white;
+            text-align: left;
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+        }
+
+        .modal-content ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .modal-content ul li {
+            margin: 5px 0;
+        }
+
+        .close {
+            color: white;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: red;
         }
     </style>
 </head>
@@ -68,14 +126,49 @@
         <h2>📊 Stats Overview</h2>
         <p class="stat"><strong>🎶 Average Song Length: </strong>{{ avg_duration }}</p>
         <p class="stat"><strong>⏱️ Longest Song: </strong>{{ longest_song_length }}</p>
-        <p class="stat"><strong>🎤 Favorite Artist: </strong>{{ favorite_artist }}</p>
-        <p class="stat"><strong>🎵 Most Listened to Genre: N/A</p>
         <p class="stat"><strong>⏳ Total Playlist Duration: </strong>{{ total_duration }}</p>
     </div>
 
     <div class="chart-container">
         <h2>🎤 Songs per Artist</h2>
-        <canvas id="artistChart"></canvas>
+        <div class="chart-scrollable">
+            <canvas id="artistChart"></canvas>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <h2>🎤 Song Duration per Artist</h2>
+        <canvas id="artistDurationChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+        <h2>🎵 Songs per Genre</h2>
+        <div class="chart-scrollable">
+            <canvas id="genreChart"></canvas>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <h2>🎵 Duration per Genre</h2>
+        <canvas id="genreDurationChart"></canvas>
+    </div>
+
+    <!-- Modal for displaying songs in a genre -->
+    <div id="genreModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalGenreTitle">Songs in Genre</h2>
+            <ul id="modalSongList"></ul>
+        </div>
+    </div>
+
+    <!-- Modal for displaying details of "Other" category -->
+    <div id="otherModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeOtherModal()">&times;</span>
+            <h2 id="modalOtherTitle">Details for "Other"</h2>
+            <ul id="otherDetailsList"></ul>
+        </div>
     </div>
 
     <script>
@@ -109,7 +202,9 @@
                 scales: {
                     x: {
                         ticks: {
-                            color: 'white'
+                            color: 'white',
+                            maxRotation: 45,
+                            minRotation: 0
                         },
                         grid: {
                             color: 'rgba(255, 255, 255, 0.1)'
@@ -137,22 +232,74 @@
                 }
             }
         });
-    </script>
-
-    <div class="chart-container">
-        <h2>🎤 Song Duration per Artist</h2>
-        <canvas id="artistDurationChart"></canvas>
-    </div>
-
-    <script>
+    
         const ctx2 = document.getElementById('artistDurationChart').getContext('2d');
+        const artistLabels = {{ artist_labels | tojson }};
+        const artistValues = {{ artist_values | tojson }};
+        const artistThreshold = {{ total_duration | tojson }} * 0.05; // 5% of total duration
+
+        const { groupedLabels: artistGroupedLabels, groupedValues: artistGroupedValues, otherDetails: artistOtherDetails } =
+            groupSmallCategories(artistLabels, artistValues, artistThreshold);
+
         const artistDurationChart = new Chart(ctx2, {
             type: 'pie',
             data: {
-                labels: {{ artist_labels | tojson }},
+                labels: artistGroupedLabels,
                 datasets: [{
                     label: 'Duration per Artist (minutes)',
-                    data: {{ artist_values | tojson }},
+                    data: artistGroupedValues,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(153, 102, 255, 0.6)',
+                        'rgba(255, 159, 64, 0.6)',
+                        'rgba(201, 203, 207, 0.6)' // Color for "Other"
+                    ],
+                    borderColor: 'rgba(255, 255, 255, 0.8)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label;
+                                if (label === 'Other') {
+                                    return `Other: ${context.raw} minutes`;
+                                }
+                                return `${label}: ${context.raw} minutes`;
+                            }
+                        }
+                    }
+                },
+                onClick: function(event, elements) {
+                    if (elements.length > 0) {
+                        const index = elements[0].index;
+                        const label = this.data.labels[index];
+
+                        if (label === 'Other') {
+                            openOtherModal(artistOtherDetails);
+                        }
+                    }
+                }
+            }
+        });
+
+        const genreCtx = document.getElementById('genreChart').getContext('2d');
+        const genreChart = new Chart(genreCtx, {
+            type: 'bar',
+            data: {
+                labels: {{ genre_labels | tojson }},
+                datasets: [{
+                    label: 'Number of Songs',
+                    data: {{ genre_values | tojson }},
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.6)',
                         'rgba(54, 162, 235, 0.6)',
@@ -169,18 +316,185 @@
                 responsive: true,
                 plugins: {
                     legend: {
-                        display: false,
+                        display: false
                     },
                     tooltip: {
                         callbacks: {
-                            label: function(tooltipItem) {
-                                return tooltipItem.label + ': ' + tooltipItem.raw + ' minutes';
+                            label: function(context) {
+                                const genre = context.label;
+                                const songTitles = {{ genre_song_titles | tojson }};
+                                return `${genre}: ${context.raw} songs\nClick for details`;
+                            }
+                        }
+                    }
+                },
+                onClick: function(event, elements) {
+                    if (elements.length > 0) {
+                        const index = elements[0].index;
+                        const genre = this.data.labels[index];
+                        const songTitles = {{ genre_song_titles | tojson }};
+                        openModal(genre, songTitles[genre]);
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: 'white',
+                            maxRotation: 45, // Rotate labels to 45 degrees
+                            minRotation: 0
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'white',
+                            precision: 0
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Number of Songs',
+                            color: 'white',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
                             }
                         }
                     }
                 }
             }
         });
+
+        const genreDurationCtx = document.getElementById('genreDurationChart').getContext('2d');
+        const genreLabels = {{ genre_labels | tojson }};
+        const genreValues = {{ genre_duration_values | tojson }};
+        const genreThreshold = {{ total_duration | tojson }} * 0.05; // 5% of total duration
+
+        const { groupedLabels: genreGroupedLabels, groupedValues: genreGroupedValues, otherDetails: genreOtherDetails } =
+            groupSmallCategories(genreLabels, genreValues, genreThreshold);
+
+        const genreDurationChart = new Chart(genreDurationCtx, {
+            type: 'pie',
+            data: {
+                labels: genreGroupedLabels,
+                datasets: [{
+                    label: 'Duration per Genre (minutes)',
+                    data: genreGroupedValues,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(153, 102, 255, 0.6)',
+                        'rgba(255, 159, 64, 0.6)',
+                        'rgba(201, 203, 207, 0.6)' // Color for "Other"
+                    ],
+                    borderColor: 'rgba(255, 255, 255, 0.8)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label;
+                                if (label === 'Other') {
+                                    return `Other: ${context.raw} minutes`;
+                                }
+                                return `${label}: ${context.raw} minutes`;
+                            }
+                        }
+                    }
+                },
+                onClick: function(event, elements) {
+                    if (elements.length > 0) {
+                        const index = elements[0].index;
+                        const label = this.data.labels[index];
+
+                        if (label === 'Other') {
+                            openOtherModal(genreOtherDetails);
+                        }
+                    }
+                }
+            }
+        });
+
+        function groupSmallCategories(labels, values, threshold) {
+            const groupedLabels = [];
+            const groupedValues = [];
+            const otherDetails = [];
+            let otherTotal = 0;
+
+            labels.forEach((label, index) => {
+                if (values[index] < threshold) {
+                    otherTotal += values[index];
+                    otherDetails.push({ label, value: values[index] });
+                } else {
+                    groupedLabels.push(label);
+                    groupedValues.push(values[index]);
+                }
+            });
+
+            if (otherTotal > 0) {
+                groupedLabels.push('Other');
+                groupedValues.push(otherTotal);
+            }
+
+            return { groupedLabels, groupedValues, otherDetails };
+        }
+    
+        // Function to open the modal and display songs in a genre
+        function openModal(genre, songs) {
+            const modal = document.getElementById('genreModal');
+            const modalTitle = document.getElementById('modalGenreTitle');
+            const modalSongList = document.getElementById('modalSongList');
+
+            // Set the modal title and song list
+            modalTitle.textContent = `Songs in ${genre}`;
+            modalSongList.innerHTML = ''; // Clear previous list
+            songs.forEach(song => {
+                const li = document.createElement('li');
+                li.textContent = `${song.title} by ${song.artist}`;
+                modalSongList.appendChild(li);
+            });
+
+            // Show the modal
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('genreModal');
+            modal.style.display = 'none';
+        }
+
+        function openOtherModal(details) {
+            const modal = document.getElementById('otherModal');
+            const list = document.getElementById('otherDetailsList');
+            list.innerHTML = ''; // Clear previous details
+
+            details.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = `${item.label}: ${item.duration} minutes`;
+                list.appendChild(li);
+            });
+
+            modal.style.display = 'flex';
+        }
+
+        function closeOtherModal() {
+            const modal = document.getElementById('otherModal');
+            modal.style.display = 'none';
+        }
     </script>
 
 </body>
