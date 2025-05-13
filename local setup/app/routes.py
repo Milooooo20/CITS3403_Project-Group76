@@ -5,6 +5,7 @@ from app.models import User, Playlist, Song
 from app.SpotifyApi import SpotifyAPI
 from collections import Counter
 from collections import defaultdict
+import random
 
 ### HARDCODED CREDENTIALS FOR TESTING ONLY THESE BEING HERE IS A SECURITY RISK AND SHOULD BE FIXED BEFORE FINAL SUBMISSION
 spotify_api = SpotifyAPI(
@@ -169,7 +170,7 @@ def register_routes(app):
             'message': 'Song removed from playlist'
         })
         
-
+    
     @app.route('/profile')
     @login_required
     def profile():
@@ -180,10 +181,12 @@ def register_routes(app):
         artist_counts = Counter()
         genre_counts = Counter()
 
+        all_artists = []
+
         for song in songs:
-            # Count artists (handle multiple)
             artists = [artist.strip() for artist in song.artist.split(',')]
             artist_counts.update(artists)
+            all_artists.extend(artists)
 
             # Fetch genre via Spotify API
             track_data = spotify_api.get_track(song.spotify_id)
@@ -192,20 +195,78 @@ def register_routes(app):
                 artist_data = spotify_api.get_artist(first_artist_id)
                 genres = artist_data.get('genres', [])
                 if genres:
-                    genre_counts[genres[0]] += 1  # Just use first genre
+                    genre_counts[genres[0]] += 1
                 else:
                     genre_counts['Unknown'] += 1
 
         # Get top 3
         top_genres = [genre for genre, _ in genre_counts.most_common(3)]
         top_artists = [artist for artist, _ in artist_counts.most_common(3)]
+
+        if len(all_artists) >= 2:
+            random_artists = random.sample(all_artists, 2)
+        else:
+            random_artists = all_artists
+
+        recommendations = []
+        song_ids_in_playlist = {song.spotify_id for song in songs}
+
+        for artist_name in random_artists:
+            search_results = spotify_api.search_tracks(artist_name, limit=1)
+            if search_results['tracks']['items']:
+                artist_id = search_results['tracks']['items'][0]['artists'][0]['id']
+                top_tracks = spotify_api.get_tracks_by_artist(artist_id)
+                new_songs = [track for track in top_tracks if track['id'] not in song_ids_in_playlist]
+                if new_songs:
+                    recommendations.append(random.choice(new_songs))
+
+        while len(recommendations) < 2:
+            recommendations.append(None)
+
         
+        genre_recommendation = None
+
+        if all_artists:
+            random_artist_name = random.choice(all_artists)
+            search_result = spotify_api.search_tracks(random_artist_name, limit=5)
+
+            if search_result['tracks']['items']:
+                track = random.choice(search_result['tracks']['items'])
+                artist_id = track['artists'][0]['id']
+                artist_data = spotify_api.get_artist(artist_id)
+                genres = artist_data.get('genres', [])
+
+                if genres:
+                    genre = random.choice(genres)
+                    genre_search = spotify_api.search_tracks(genre, limit=50)
+
+                    if genre_search.get('tracks') and genre_search['tracks'].get('items'):
+                        genre_tracks = genre_search['tracks']['items']
+                        random.shuffle(genre_tracks)
+
+                        # Try to recommend from a different artist
+                        for track in genre_tracks:
+                            candidate_artist = track['artists'][0]['name']
+                            if candidate_artist not in all_artists and track['id'] not in song_ids_in_playlist:
+                                genre_recommendation = track
+                                break
+
+                        # Fallback: allow same artist but different song
+                        if not genre_recommendation:
+                            for track in genre_tracks:
+                                if track['id'] not in song_ids_in_playlist:
+                                    genre_recommendation = track
+                                    break
 
         return render_template('profile.html',
                             user=user,
                             songs=songs,
                             top_genres=top_genres,
-                            top_artists=top_artists)
+                            top_artists=top_artists,
+                            recommended_song_1=recommendations[0],
+                            recommended_song_2=recommendations[1],
+                            recommended_song_genre=genre_recommendation)
+
 
     @app.route('/analysis', methods=['GET', 'POST'])
     @login_required
