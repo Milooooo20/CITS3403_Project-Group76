@@ -181,92 +181,52 @@
     </div>
 
     <div class="container">
-        <div class="full">
-            <h2>Song recommendations based on your playlist:</h2>
-            <div class="scroll-container-horizontal">
-                <div class="image-card">
-                    <div class="image-box">
-                        <img src="https://placehold.co/300x300" alt="Image description">
+        {% if recommended_song_1 or recommended_song_2 %}
+            <div class="full">
+                <h2>Recommended Songs For You!</h2>
+                <div class="scroll-container-horizontal">
+                    {% if recommended_song_1 %}
+                        <div class="image-card">
+                            <a href="https://open.spotify.com/track/{{ recommended_song_1.id }}" target="_blank">
+                                <div class="image-box">
+                                    <img src="{{ recommended_song_1.album.images[0].url }}" alt="{{ recommended_song_1.name }}">
+                                </div>
+                            </a>
+                            <div class="image-caption">
+                                <div class="image-title">{{ recommended_song_1.name }}</div>
+                                <p>By {{ recommended_song_1.artists[0].name }}</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if recommended_song_2 %}
+                        <div class="image-card">
+                            <a href="https://open.spotify.com/track/{{ recommended_song_2.id }}" target="_blank">
+                                <div class="image-box">
+                                    <img src="{{ recommended_song_2.album.images[0].url }}" alt="{{ recommended_song_2.name }}">
+                                </div>
+                            </a>
+                            <div class="image-caption">
+                                <div class="image-title">{{ recommended_song_2.name }}</div>
+                                <p>By {{ recommended_song_2.artists[0].name }}</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if recommended_song_genre %}
+                    <div class="image-card">
+                        <a href="https://open.spotify.com/track/{{ recommended_song_genre.id }}" target="_blank">
+                            <div class="image-box">
+                                <img src="{{ recommended_song_genre.album.images[0].url }}" alt="{{ recommended_song_genre.name }}">
+                            </div>
+                        </a>
+                        <div class="image-caption">
+                            <div class="image-title">{{ recommended_song_genre.name }}</div>
+                            <p>By {{ recommended_song_genre.artists[0].name }}</p>
+                        </div>
                     </div>
-                    <div class="image-caption">
-                        <div class="image-title">Song Name</div>
-                        <p>Artist name.</p>
-                    </div>
-                </div>
-                <div class="image-card">
-                    <div class="image-box">
-                        <img src="https://placehold.co/300x300" alt="Image description">
-                    </div>
-                    <div class="image-caption">
-                        <div class="image-title">Song Name</div>
-                        <p>Artist name.</p>
-                    </div>
-                </div>
-                <div class="image-card">
-                    <div class="image-box">
-                        <img src="https://placehold.co/300x300" alt="Image description">
-                    </div>
-                    <div class="image-caption">
-                        <div class="image-title">Song Name</div>
-                        <p>Artist name.</p>
-                    </div>
-                </div>
-                <div class="image-card">
-                    <div class="image-box">
-                        <img src="https://placehold.co/300x300" alt="Image description">
-                    </div>
-                    <div class="image-caption">
-                        <div class="image-title">Song Name</div>
-                        <p>Artist name.</p>
-                    </div>
-                </div>
-                <div class="image-card">
-                    <div class="image-box">
-                        <img src="https://placehold.co/300x300" alt="Image description">
-                    </div>
-                    <div class="image-caption">
-                        <div class="image-title">Song Name</div>
-                        <p>Artist name.</p>
-                    </div>
-                </div>
-                <div class="image-card">
-                    <div class="image-box">
-                        <img src="https://placehold.co/300x300" alt="Image description">
-                    </div>
-                    <div class="image-caption">
-                        <div class="image-title">Song Name</div>
-                        <p>Artist name.</p>
-                    </div>
-                </div>
-                <div class="image-card">
-                    <div class="image-box">
-                        <img src="https://placehold.co/300x300" alt="Image description">
-                    </div>
-                    <div class="image-caption">
-                        <div class="image-title">Song Name</div>
-                        <p>Artist name.</p>
-                    </div>
-                </div>
-                <div class="image-card">
-                    <div class="image-box">
-                        <img src="https://placehold.co/300x300" alt="Image description">
-                    </div>
-                    <div class="image-caption">
-                        <div class="image-title">Song Name</div>
-                        <p>Artist name.</p>
-                    </div>
-                </div>
-                <div class="image-card">
-                    <div class="image-box">
-                        <img src="https://placehold.co/300x300" alt="Image description">
-                    </div>
-                    <div class="image-caption">
-                        <div class="image-title">Song Name</div>
-                        <p>Artist name.</p>
-                    </div>
+                {% endif %}
                 </div>
             </div>
-        </div>
+        {% endif %}
     </div>
     <div class="container">
         <div class="full">
