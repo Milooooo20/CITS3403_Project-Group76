@@ -177,13 +177,24 @@ def register_routes(app):
         songs = user_playlist.songs.all()
         return render_template('profile.html', user=current_user, songs=songs)
 
-    @app.route('/analysis')
+    @app.route('/analysis', methods=['GET', 'POST'])
     @login_required
     def analysis():
+        if request.method == 'POST':
+            user_id = request.form.get('userId')
+            user = User.query.get(user_id)
+            if not user:
+                flash('User not found', 'error')
+                return redirect(url_for('share'))
+            elif user not in current_user.shared_by:
+                flash('You cannot view this user\'s analysis', 'error')
+                return redirect(url_for('share'))
+        else:
+            user = current_user
+        
         user_playlist = current_user.get_or_create_playlist()
         songs = user_playlist.songs.all()
 
-        all_artists = []
         total_duration = 0  # To accumulate the total song length in milliseconds
         artist_durations = {}  # Dictionary to store the total duration per artist
         genre_durations = defaultdict(int)  # To store total duration per genre
@@ -198,7 +209,6 @@ def register_routes(app):
         for song in songs:
             # Split by comma and count individual artists
             artists = [artist.strip() for artist in song.artist.split(',')]
-            all_artists.extend(artists)
 
             # Fetch track details from Spotify API to get the duration
             track_data = spotify_api.get_track(song.spotify_id)
@@ -252,30 +262,36 @@ def register_routes(app):
         else:
             longest_song_length = "N/A"
 
-        # Prepare artist counts data for the chart
-        labels = list(artist_counts.keys())
-        values = list(artist_counts.values())
+        # Prepare artist counts data for the bar chart
+        sorted_artist_counts = sorted(list(artist_counts.items()), key=lambda x: x[1], reverse=True)
+        artist_count_labels, artist_count_values = zip(*sorted_artist_counts) if sorted_artist_counts else ([], [])
 
-        # Prepare data for the pie chart (artist duration)
-        artist_labels = list(artist_durations.keys())
-        artist_values = [duration // 60000 for duration in artist_durations.values()]  # Convert duration to minutes
+        # Prepare artist duration data for the pie chart
+        sorted_artist_durations = sorted(list(artist_durations.items()), key=lambda x: x[1], reverse=True)
+        artist_duration_labels, artist_duration_values = zip(*sorted_artist_durations) if sorted_artist_durations else ([], [])
+        artist_duration_values = [duration // 60000 for duration in artist_duration_values]  # Convert duration to minutes
 
-        # Prepare genre data for charts
-        genre_labels = list(genre_counts.keys())
-        genre_values = list(genre_counts.values())
-        genre_duration_values = [duration // 60000 for duration in genre_durations.values()]  # Convert to minutes
+        # Prepare genre counts data for the bar chart
+        sorted_genre_counts = sorted(list(genre_counts.items()), key=lambda x: x[1], reverse=True)
+        genre_count_labels, genre_count_values = zip(*sorted_genre_counts) if sorted_genre_counts else ([], [])
+
+        # Prepare genre duration data for the pie chart
+        sorted_genre_durations = sorted(list(genre_durations.items()), key=lambda x: x[1], reverse=True)
+        genre_duration_labels, genre_duration_values = zip(*sorted_genre_durations) if sorted_genre_durations else ([], [])
+        genre_duration_values = [duration // 60000 for duration in genre_duration_values]  # Convert to minutes
 
         return render_template('analysis.html', 
-                            user=current_user, 
-                            labels=labels, 
-                            values=values, 
+                            user=user, 
+                            artist_count_labels=artist_count_labels, 
+                            artist_count_values=artist_count_values, 
                             avg_duration=avg_duration, 
                             longest_song_length=longest_song_length, 
                             total_duration=total_duration_str,  
-                            artist_labels=artist_labels,  
-                            artist_values=artist_values,  
-                            genre_labels=genre_labels,  
-                            genre_values=genre_values,  
+                            artist_duration_labels=artist_duration_labels,  
+                            artist_duration_values=artist_duration_values,  
+                            genre_count_labels=genre_count_labels,  
+                            genre_count_values=genre_count_values, 
+                            genre_duration_labels=genre_duration_labels,
                             genre_duration_values=genre_duration_values,
                             genre_song_titles=genre_to_songs)  
         
@@ -295,22 +311,28 @@ def register_routes(app):
         return render_template('share.html')
 
     @app.route('/search_users/<username>')
+    @login_required
     def search_users(username):
         matching_users = User.query.filter(User.username.ilike(f"%{username}%")).all()
         return jsonify([{'id': user.id, 'username': user.username} for user in matching_users])
 
     @app.route('/get_shared_users')
+    @login_required
     def get_shared_users():
         shared_with = [{'id': user.id, 'username': user.username} for user in current_user.shared_with]
         shared_by = [{'id': user.id, 'username': user.username} for user in current_user.shared_by]
         return jsonify({'shared_with': shared_with, 'shared_by': shared_by})
 
-    @app.route('/unshare/<int:user_id>', methods=['POST'])
-    def unshare(user_id):
+    @app.route('/unshare', methods=['POST'])
+    @login_required
+    def unshare():
+        user_id = request.form.get('userId')
         user = User.query.get_or_404(user_id)
+        
         if user in current_user.shared_with:
             current_user.shared_with.remove(user)
             db.session.commit()
+        
         return jsonify({'success': True}), 200
     
     @app.route('/sign_in', methods=['GET', 'POST'])
