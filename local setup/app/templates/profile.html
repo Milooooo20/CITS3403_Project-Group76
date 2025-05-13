@@ -181,7 +181,7 @@
     </div>
 
     <div class="container">
-        {% if recommended_song_1 or recommended_song_2 %}
+        {% if recommended_song_1 or recommended_song_2 or recommended_song_genre %}
             <div class="full">
                 <h2>Recommended Songs For You!</h2>
                 <div class="scroll-container-horizontal">
@@ -223,7 +223,7 @@
                             <p>By {{ recommended_song_genre.artists[0].name }}</p>
                         </div>
                     </div>
-                {% endif %}
+                    {% endif %}
                 </div>
             </div>
         {% endif %}
