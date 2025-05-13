@@ -4,6 +4,7 @@ from app import db
 from app.models import User, Playlist, Song
 from app.SpotifyApi import SpotifyAPI
 from collections import Counter
+from collections import defaultdict
 
 ### HARDCODED CREDENTIALS FOR TESTING ONLY THESE BEING HERE IS A SECURITY RISK AND SHOULD BE FIXED BEFORE FINAL SUBMISSION
 spotify_api = SpotifyAPI(
@@ -185,11 +186,14 @@ def register_routes(app):
         all_artists = []
         total_duration = 0  # To accumulate the total song length in milliseconds
         artist_durations = {}  # Dictionary to store the total duration per artist
+        genre_durations = defaultdict(int)  # To store total duration per genre
         num_songs = len(songs)  # Total number of songs
         longest_song = None
         longest_duration = 0  # Track the longest song duration
 
         artist_counts = Counter()  # To count artist occurrences
+        genre_counts = Counter()  # To count songs per genre
+        genre_to_songs = defaultdict(list)  # Group songs by genre
 
         for song in songs:
             # Split by comma and count individual artists
@@ -215,6 +219,17 @@ def register_routes(app):
             # Count artist occurrences
             artist_counts.update(artists)
 
+            # Fetch genre of the first artist
+            if track_data.get('artists'):
+                first_artist_id = track_data['artists'][0]['id']
+                artist_data = spotify_api.get_artist(first_artist_id)
+                genres = artist_data.get('genres', [])
+                if genres:
+                    genre = genres[0]  # Use the first genre
+                    genre_to_songs[genre].append({'title': song.title, 'artist': song.artist})  # Add title and artist
+                    genre_counts[genre] += 1
+                    genre_durations[genre] += duration_ms
+
         # Calculate average song duration in minutes and seconds
         if num_songs > 0:
             avg_duration_ms = total_duration / num_songs
@@ -228,10 +243,6 @@ def register_routes(app):
         total_minutes = total_duration // 60000
         total_seconds = (total_duration % 60000) // 1000
         total_duration_str = f"{total_minutes}m {total_seconds}s"  # Format total duration
-
-        # Find the most popular artist
-        most_popular_artist = artist_counts.most_common(1)[0] if artist_counts else ("N/A", 0)
-        favorite_artist = most_popular_artist[0]  # Most frequent artist name
 
         # Find the top song (longest duration)
         if longest_song:
@@ -247,16 +258,24 @@ def register_routes(app):
         artist_labels = list(artist_durations.keys())
         artist_values = [duration // 60000 for duration in artist_durations.values()]  # Convert duration to minutes
 
+        # Prepare genre data for charts
+        genre_labels = list(genre_counts.keys())
+        genre_values = list(genre_counts.values())
+        genre_duration_values = [duration // 60000 for duration in genre_durations.values()]  # Convert to minutes
+
         return render_template('analysis.html', 
                             user=current_user, 
                             labels=labels, 
                             values=values, 
                             avg_duration=avg_duration, 
                             longest_song_length=longest_song_length, 
-                            favorite_artist=favorite_artist,
                             total_duration=total_duration_str,  
                             artist_labels=artist_labels,  
-                            artist_values=artist_values)  
+                            artist_values=artist_values,  
+                            genre_labels=genre_labels,  
+                            genre_values=genre_values,  
+                            genre_duration_values=genre_duration_values,
+                            genre_song_titles=genre_to_songs)  
         
     @app.route('/share', methods=['GET', 'POST'])
     @login_required
