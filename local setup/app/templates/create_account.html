@@ -100,7 +100,7 @@
             <a href="{{ url_for('profile') }}">My Profile</a>
             <a href="{{ url_for('compare') }}">Compare</a>
             <a href="{{ url_for('share') }}">Share</a>
-            <a href="{{ url_for('logout') }}" class="active">Log In</a>
+            <a href="{{ url_for('sign_in') }}" class="active">Log In</a>
         </div>
     </div>
     <div class="box">
@@ -134,7 +134,7 @@
 
                 <input type="submit" value="Create Account">
             </form>
-            <p>Already have an account? <a href="{{ url_for('logout') }}">Log In</a></p>
+            <p>Already have an account? <a href="{{ url_for('sign_in') }}">Log In</a></p>
         </div>
     </div>
 </body>

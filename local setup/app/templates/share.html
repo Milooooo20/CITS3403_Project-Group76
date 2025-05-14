@@ -40,13 +40,6 @@
             border-bottom-left-radius: 20px;
             border-bottom-right-radius: 20px;
         }
-        #searchResults li {
-            margin: 0;
-            overflow-x: auto;
-        }
-        #searchResults li::-webkit-scrollbar {
-            display: none;
-        }
         #searchResults li.result-item {
             color: black;
             text-align: left;
@@ -63,6 +56,13 @@
             text-align: center;
             color: grey;
             padding: 2em 2em;
+        }
+        #searchResults li > p {
+            margin: 0;
+            overflow-x: auto;
+        }
+        #searchResults li > p::-webkit-scrollbar {
+            display: none;
         }
         #shareButton {
             visibility: hidden;
@@ -140,6 +140,11 @@
         .list-button:active {
             color: rgb(40, 0, 30);
         }
+        .flashes li.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
     </style>
 </head>
 <body>
@@ -173,12 +178,23 @@
         </div>
     </div>
     <div class="container">
-        <h1 class="text_box">Share With Others!</h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">
+                            {{ message }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        <h1>Share With Others!</h1>
         <div class="search-container">
             <input type="search" id="userSearch" name="userSearch" placeholder="Search for a user" autocomplete="off">
             <ul id="searchResults"></ul> <!-- Container for displaying search results -->
         </div>
-        <button type="submit" id="shareButton" title="Share"><i class='fa fa-share fa-2x'></i></button>
+        <button type="button" id="shareButton" title="Share"><i class='fa fa-share fa-2x'></i></button>
         <div class="bottom-container">
             <div class="shared-container">
                 <h2></h2>
@@ -218,7 +234,8 @@
                     displaySearchResults(data, $resultsContainer);
                 },
                 error: function () {
-                    displayErrorMessage($resultsContainer);
+                    $resultsContainer.append(
+                        '<li class="no-results"><p>An error occurred. Please try again.</p></li>');
                 }
             });
         }
@@ -226,10 +243,10 @@
         // Function to display search results
         function displaySearchResults(data, $resultsContainer) {
             if (data.length === 0) {
-                $resultsContainer.append('<li class="no-results">No users found</li>');
+                $resultsContainer.append('<li class="no-results"><p>No users found</p></li>');
             } else {
                 data.forEach(user => {
-                    const $li = $('<li class="result-item"></li>').text(user.username);
+                    const $li = $(`<li class="result-item"><p>${user.username}</p></li>`);
                     
                     $li.on('click', function () {
                         $('#userSearch').val(user.username);
@@ -240,11 +257,6 @@
                     $resultsContainer.append($li);
                 });
             }
-        }
-
-        // Function to display an error message
-        function displayErrorMessage($resultsContainer) {
-            $resultsContainer.append('<li class="no-results">An error occurred. Please try again.</li>');
         }
 
         // Fetch shared users and populate the lists
@@ -286,9 +298,18 @@
 
             sharedBy.forEach(user => {
                 const $listItem = $(`<li><p>${user.username}</p></li>`);
-                const $compareButton = $('<button type="button" class="list-button">Compare</button>');
+
+                // Create a form for the analysis button
+                const $form = $('<form action="/analysis" method="POST"></form>');
+                const $hiddenInput = $(`<input type="hidden" name="userId" value="${user.id}">`);
+                const $analysisButton = $('<button type="submit" class="list-button">Analysis</button>');
+
+                // Append the hidden input and button to the form
+                $form.append($hiddenInput);
+                $form.append($analysisButton);
                 
-                $listItem.append($compareButton);
+                // Append the form to the list item
+                $listItem.append($form);
                 $sharedByList.append($listItem);
             });
             $sharedByHeader.text(`Shared By: ${sharedBy.length}`); // Update header with count
@@ -297,8 +318,9 @@
         // Unshare a user
         function unshareUser(userId) {
             $.ajax({
-                url: `/unshare/${userId}`,
+                url: `/unshare`,
                 method: 'POST',
+                data: { userId: userId },
                 success: function () {
                     fetchSharedUsers();
                     alert('Unshared user successfully.');
