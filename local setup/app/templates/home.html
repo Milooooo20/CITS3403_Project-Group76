@@ -93,7 +93,11 @@
             <a href="{{ url_for('profile') }}">My Profile</a>
             <a href="{{ url_for('compare') }}">Compare</a>
             <a href="{{ url_for('share') }}">Share</a>
-            <a href="{{ url_for('logout') }}">Log Out</a>
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('logout') }}">Log Out</a>
+            {% else %}
+                <a href="{{ url_for('sign_in') }}">Log In</a>
+            {% endif %}
         </div>
     </div>
     <div class="content">
@@ -127,13 +131,15 @@
         </div>
 
         <div class="bottom-center">
-            <p style="font-size: 18px;">What are you waiting for? Get an analysis of your listening habits now!</p>
-            <a href="{{ url_for('sign_in') }}" style="text-decoration: none;">
-                <button>Sign In</button>
-            </a>
-            <a href="{{ url_for('create_account') }}" style="text-decoration: none;">
-                <button>Sign Up</button>
-            </a>
+            {% if not current_user.is_authenticated %}
+                <p style="font-size: 18px;">What are you waiting for? Get an analysis of your listening habits now!</p>
+                <a href="{{ url_for('sign_in') }}" style="text-decoration: none;">
+                    <button>Sign In</button>
+                </a>
+                <a href="{{ url_for('create_account') }}" style="text-decoration: none;">
+                    <button>Sign Up</button>
+                </a>
+            {% endif %}
         </div>
     </div>
 
