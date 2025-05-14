@@ -16,7 +16,7 @@ spotify_api = SpotifyAPI(
 def register_routes(app):
     @app.route('/')
     def home():
-        return render_template('home.html')
+        return render_template('home.html', user=current_user)
 
     @app.route('/compare')
     @login_required
