@@ -36,9 +36,10 @@
         }
 
         .scroll-container-vertical {
-            height: 200px; 
+            height: 220px; 
             overflow-y: auto; 
-            padding: 10px;
+            padding: 0 10px;
+            margin-bottom: 20px;
             scrollbar-width: thin;
         }
         .item {
@@ -101,6 +102,13 @@
         .flex-lists > div {
             flex: 1;
         }
+
+        .ranks li {
+            font-size: 1.1em;
+            padding-top: 0.7em;
+            padding-bottom: 0.7em;
+        }
+        
     </style>
 </head>
 <body>
@@ -121,8 +129,7 @@
 
     <div class="container">
         <div class="left">
-            <h2>My Playlist</h2>
-            <h3>Your Playlist</h3>
+            <h2>Playlist</h2>
                 <div class="scroll-container-vertical" id="playlist-container">
                 {% if songs %}
                     {% for song in songs %}
@@ -143,7 +150,7 @@
             <div class="flex-lists">
                 <div>
                     <h3>Top Genres</h3>
-                    <ol>
+                    <ol class="ranks">
                         {% for genre in top_genres %}
                             <li>{{ genre }}</li>
                         {% else %}
@@ -153,7 +160,7 @@
                 </div>
                 <div>
                     <h3>Top Artists</h3>
-                    <ol>
+                    <ol class="ranks">
                         {% for artist in top_artists %}
                             <li>{{ artist }}</li>
                         {% else %}
