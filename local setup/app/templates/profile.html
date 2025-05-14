@@ -107,13 +107,32 @@
 </head>
 <body>
     <div class="navbar">
-        <img src='../static/assets/logo.png' height="80px" width="145px">
+        <img class="logo" src='../static/assets/logo.png'>
         <div class="nav-right">
             <a href="{{ url_for('home') }}">Home</a>
             <a href="{{ url_for('profile') }}" class="active">My Profile</a>
             <a href="{{ url_for('compare') }}">Compare</a>
             <a href="{{ url_for('share') }}">Share</a>
-            <a href="{{ url_for('logout') }}">Log Out</a>
+            <a href="#" onclick="showLogoutConfirmation()">Log Out</a>
+                <div id="logout-confirmation">
+                    <p>Are you sure you want to log out?</p>
+                    <button class="btn" onclick="confirmLogout()">Log Out</button>
+                    <button class="btn" onclick="hideLogoutConfirmation()">Cancel</button>
+                </div>
+                <div id="logout_overlay"></div>
+                <script>
+                    function showLogoutConfirmation() {
+                        document.getElementById('logout-confirmation').style.display = 'block';
+                        document.getElementById('logout_overlay').style.display = 'block';
+                    }
+                    function hideLogoutConfirmation() {
+                        document.getElementById('logout-confirmation').style.display = 'none';
+                        document.getElementById('logout_overlay').style.display = 'none';
+                    }
+                    function confirmLogout() {
+                        window.location.href = "{{ url_for('logout') }}";
+                    }
+                </script>
         </div>
     </div>
 
