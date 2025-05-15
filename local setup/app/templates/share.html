@@ -9,15 +9,16 @@
         .container {
             display: flex;
             flex-direction: column;
-            min-height: calc(100vh - 120px);
+            min-height: calc(100% - 120px);
             align-items: center;
             padding-top: 2em;
-            padding-bottom: 4em;
+            padding-bottom: 2em;
         }
         .search-container {
             background-color: white;
             border-radius: 20px;
             box-shadow: 0px 0px 30px grey;
+            margin-top: 10px;
         }
         .search-container > * {
             font-size: 1.1em;
@@ -68,7 +69,7 @@
             visibility: hidden;
             display: block;
             width: 5em;
-            margin: 1em auto;
+            margin: 2em auto;
             aspect-ratio: 1/1;
             border: 1px solid white;
             border-radius: 50%;
@@ -83,15 +84,19 @@
             color: rgb(40, 0, 30);
         }
         .bottom-container {
-            width: 100vw;
+            width: 96vw;
             display: flex;
             justify-content: center;
             background-color: rgba(0, 0, 0, 0.35);
+            border-radius: 25px;
+            margin-bottom: 0%;
         }
         .shared-container {
+
             width: 25em;
             height: 25em;
             margin: 2em 1em;
+
             display: flex;
             flex-direction: column;
             border: 1px solid white;
@@ -151,11 +156,17 @@
         .shared-list li button:active {
             color: rgb(40, 0, 30);
         }
+        .button-stack {
+            display: flex;
+            flex-direction: row;
+            gap: 0.5em;
+        }
         .flashes li.error {
             background-color: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
+
     </style>
 </head>
 <body>
@@ -216,6 +227,8 @@
             </div>
         </div>
     </div>
+
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         let debounceTimer;
@@ -303,12 +316,14 @@
 
                 $listItem.append($unshareButton);
                 $sharedWithList.append($listItem);
+                $sharedWithList.append($('<br>'))
             });
             $sharedWithHeader.text(`Shared With: ${sharedWith.length}`); // Update header with count
 
             sharedBy.forEach(user => {
                 const $listItem = $(`<li><p>${user.username}</p></li>`);
                 const $buttonsContainer = $('<div class="list-button"></div>');
+
 
                 const $profileButton = $('<button type="button" class="inner-button">Profile</button>');
                 $profileButton.on('click', function () {
@@ -323,7 +338,36 @@
                 $buttonsContainer.append($analysisButton);
 
                 $listItem.append($buttonsContainer);
+
                 $sharedByList.append($listItem);
+                $sharedByList.append($('<br>'));
+
+                    /*const $listItem = $(`<li><p>${user.username}</p></li>`);
+
+                    // Create a vertical button container
+                    const $buttonContainer = $('<div class="button-stack"></div>');
+
+                    // Analysis button form
+                    const $analysis_form = $('<form action="/analysis" method="POST"></form>');
+                    const $analysis_hiddenInput = $(`<input type="hidden" name="userId" value="${user.id}">`);
+                    const $analysis_Button = $('<button type="submit" class="list-button">Analysis</button>');
+                    $analysis_form.append($analysis_hiddenInput);
+                    $analysis_form.append($analysis_Button);
+
+                    // Compare button form
+                    const $compare_form = $('<form action="/compare" method="GET"></form>');
+                    const $compare_hiddenInput = $(`<input type="hidden" name="userId" value="${user.id}">`);
+                    const $compare_Button = $('<button type="submit" class="list-button">Compare</button>');
+                    $compare_form.append($compare_hiddenInput);
+                    $compare_form.append($compare_Button);
+
+                    // Stack forms vertically
+                    $buttonContainer.append($analysis_form, $compare_form);
+
+                    // Append to list item
+                    $listItem.append($buttonContainer);
+                    $sharedByList.append($listItem);
+                    $sharedByList.append($('<br>'))*/
             });
             $sharedByHeader.text(`Shared By: ${sharedBy.length}`); // Update header with count
         }
@@ -336,7 +380,7 @@
                 data: { userId: userId },
                 success: function () {
                     fetchSharedUsers();
-                    alert('Unshared user successfully.');
+                    alert('No longer share with user?');
                 },
                 error: function () {
                     alert('Failed to unshare user.');
