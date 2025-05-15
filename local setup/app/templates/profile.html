@@ -9,20 +9,20 @@
         }
         .left {
             flex: 1; 
-            background-color: rgb(124, 124, 124);
+            background-color: rgba(124, 124, 124, 0.5);
             margin: 30px;
             padding: 20px;
             border-radius: 15px;
         }
         .right {
             flex: 2; 
-            background-color: rgb(124, 124, 124);
+            background-color: rgba(124, 124, 124, 0.5);
             margin: 30px;
             padding: 20px;
             border-radius: 15px;
         }
         .full {
-            background-color: rgb(124, 124, 124);
+            background-color: rgba(124, 124, 124, 0.5);
             margin: 30px;
             padding: 20px;
             max-width: 100%;
@@ -31,7 +31,7 @@
             overflow-x: hidden;
         }
         .full_bottom {
-            background-color: rgb(124, 124, 124);
+            background-color: rgba(124, 124, 124, 0.5);
             margin: 30px;
             padding-bottom: 20px;
             max-width: 100%;
@@ -50,7 +50,7 @@
             height: 220px; 
             overflow-y: auto; 
             padding: 0 10px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             scrollbar-width: thin;
         }
         .item {
@@ -60,7 +60,13 @@
             border-radius: 5px;
             color: black;
         }
-
+        .song-title {
+            font-size: larger;
+            font-weight: bold;
+        }
+        .song-artist {
+            font-style: italic;
+        }
         .scroll-container-horizontal {
             width: 100%;
             overflow-x: auto;
@@ -108,6 +114,7 @@
             display: flex;
             justify-content: space-between;
             gap: 30px;
+            height: 62%;
         }
 
         .flex-lists > div {
@@ -128,7 +135,6 @@
         <div class="nav-right">
             <a href="{{ url_for('home') }}">Home</a>
             <a href="{{ url_for('profile') }}" class="active">My Profile</a>
-            <a href="{{ url_for('compare') }}">Compare</a>
             <a href="{{ url_for('share') }}">Share</a>
             <a href="#" onclick="showLogoutConfirmation()">Log Out</a>
                 <div id="logout-confirmation">
@@ -164,16 +170,18 @@
                 {% if songs %}
                     {% for song in songs %}
                     <div class="item song-item" data-id="{{ song.id }}">
-                        <span class="song-title">{{ song.title }}</span> - <span class="song-artist">{{ song.artist }}</span>
+                        <span class="song-title">{{ song.title }}</span>
+                        <br>
+                        <span class="song-artist">{{ song.artist }}</span>
                     </div>
                     {% endfor %}
                 {% else %}
                     <div class="item empty-playlist">Your playlist is empty</div>
                 {% endif %}
                 </div>
-                <div class="playlist-actions">
+            <div class="playlist-actions">
                 <button class="btn" onclick="window.location.href=`{{ url_for('edit_playlist') }}`">Add another song?</button>
-                </div>
+            </div>
         </div>
         <div class="right">
             <h2>🎼 Top Genres & Artists</h2>
@@ -199,7 +207,7 @@
                     </ol>
                 </div>
             </div> 
-            <button onclick="window.location.href=`{{ url_for('analysis') }}`">Click to see detailed analysis</button>
+            <button class="btn" onclick="window.location.href=`{{ url_for('analysis') }}`">Click to see detailed analysis</button>
         </div>
     </div>
 
@@ -253,7 +261,7 @@
     </div>
     <div class="container">
         <div class="full_bottom"> 
-            <button class="btn" onclick="window.location.href=`{{ url_for('compare') }}`">Like to see how your Playlist compares with others? Click here!</button>
+            <button class="btn" onclick="window.location.href=`{{ url_for('share') }}`">Like to see how your Playlist compares with others? Click here!</button>
         </div>
     </div>
 </body>

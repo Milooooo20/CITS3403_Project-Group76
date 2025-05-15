@@ -85,7 +85,7 @@ class SpotifyAPI:
 
         return response.json()
 
-        def get_tracks_by_artist(self, artist_name, limit=50):
+    def get_tracks_by_artist(self, artist_name, limit=50):
         """Get tracks by an artist"""
         token = self.get_token()
         url = f"https://api.spotify.com/v1/artists/{artist_name}/top-tracks?market=US"
