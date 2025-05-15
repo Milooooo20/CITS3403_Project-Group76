@@ -153,7 +153,28 @@
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
-
+        @media (max-width: 650px) {
+            .bottom-container {
+                display: flex;
+                flex-direction: column;
+                width: 90%;
+            }
+            .shared-container {
+                width: auto;
+                height: 22em;
+                margin: 2em 1em;
+                display: flex;
+                flex-direction: column;
+                border: 1px solid white;
+                border-radius: 20px;
+            }
+            #searchResults {
+                width: 100%;
+            }
+            #searchResults li:first-child {
+                border-top: 1px solid rgb(200, 200, 200);
+            }
+        }
     </style>
 </head>
 <body>
