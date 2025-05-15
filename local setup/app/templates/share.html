@@ -156,11 +156,6 @@
         .shared-list li button:active {
             color: rgb(40, 0, 30);
         }
-        .button-stack {
-            display: flex;
-            flex-direction: row;
-            gap: 0.5em;
-        }
         .flashes li.error {
             background-color: #f8d7da;
             color: #721c24;
@@ -341,33 +336,6 @@
 
                 $sharedByList.append($listItem);
                 $sharedByList.append($('<br>'));
-
-                    /*const $listItem = $(`<li><p>${user.username}</p></li>`);
-
-                    // Create a vertical button container
-                    const $buttonContainer = $('<div class="button-stack"></div>');
-
-                    // Analysis button form
-                    const $analysis_form = $('<form action="/analysis" method="POST"></form>');
-                    const $analysis_hiddenInput = $(`<input type="hidden" name="userId" value="${user.id}">`);
-                    const $analysis_Button = $('<button type="submit" class="list-button">Analysis</button>');
-                    $analysis_form.append($analysis_hiddenInput);
-                    $analysis_form.append($analysis_Button);
-
-                    // Compare button form
-                    const $compare_form = $('<form action="/compare" method="GET"></form>');
-                    const $compare_hiddenInput = $(`<input type="hidden" name="userId" value="${user.id}">`);
-                    const $compare_Button = $('<button type="submit" class="list-button">Compare</button>');
-                    $compare_form.append($compare_hiddenInput);
-                    $compare_form.append($compare_Button);
-
-                    // Stack forms vertically
-                    $buttonContainer.append($analysis_form, $compare_form);
-
-                    // Append to list item
-                    $listItem.append($buttonContainer);
-                    $sharedByList.append($listItem);
-                    $sharedByList.append($('<br>'))*/
             });
             $sharedByHeader.text(`Shared By: ${sharedBy.length}`); // Update header with count
         }
