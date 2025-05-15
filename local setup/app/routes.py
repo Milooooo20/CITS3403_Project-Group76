@@ -210,14 +210,6 @@ def register_routes(app):
         # Get top 3
         top_genres = [genre for genre, _ in genre_counts.most_common(3)]
         top_artists = [artist for artist, _ in artist_counts.most_common(3)]
-
-        if not is_own_profile:
-            return render_template('profile.html',
-                            user=user,
-                            songs=songs,
-                            top_genres=top_genres,
-                            top_artists=top_artists,
-                            is_own_profile=is_own_profile)
         
         if len(all_artists) >= 2:
             random_artists = random.sample(all_artists, 2)
