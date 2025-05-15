@@ -1,6 +1,7 @@
 import os
 import requests
 import base64
+import time
 from datetime import datetime, timedelta
 
 class SpotifyAPI:
@@ -10,6 +11,9 @@ class SpotifyAPI:
         self.client_secret = client_secret
         self.token = None
         self.token_expiry = datetime.now()
+
+        self.track_cache = {}
+        self.artist_cache = {}
     
     def get_token(self):
         if self.token and datetime.now() < self.token_expiry:
@@ -59,46 +63,71 @@ class SpotifyAPI:
     
     def get_track(self, track_id):
         """Get details for a specific track"""
+        if track_id in self.track_cache:
+            return self.track_cache[track_id]
+
         token = self.get_token()
         url = f"https://api.spotify.com/v1/tracks/{track_id}"
         headers = {
             "Authorization": f"Bearer {token}"
         }
-        
+
         response = requests.get(url, headers=headers)
-        if response.status_code != 200:
+        if response.status_code == 429:
+            retry_after = int(response.headers.get('Retry-After', 1))
+            print(f"Rate limited on get_track. Retrying after {retry_after} seconds.")
+            time.sleep(retry_after)
+            return self.get_track(track_id)
+        elif response.status_code != 200:
             raise Exception(f"Track request failed with status {response.status_code}: {response.text}")
 
-        return response.json()
+        track_data = response.json()
+        self.track_cache[track_id] = track_data
+        return track_data
 
     def get_artist(self, artist_id):
         """Get details for a specific artist"""
+        if artist_id in self.artist_cache:
+            return self.artist_cache[artist_id]
+
         token = self.get_token()
         url = f"https://api.spotify.com/v1/artists/{artist_id}"
         headers = {
             "Authorization": f"Bearer {token}"
         }
-        
+
         response = requests.get(url, headers=headers)
-        if response.status_code != 200:
+        if response.status_code == 429:
+            retry_after = int(response.headers.get('Retry-After', 1))
+            print(f"Rate limited on get_artist. Retrying after {retry_after} seconds.")
+            time.sleep(retry_after)
+            return self.get_artist(artist_id)
+        elif response.status_code != 200:
             raise Exception(f"Artist request failed with status {response.status_code}: {response.text}")
 
-        return response.json()
+        artist_data = response.json()
+        self.artist_cache[artist_id] = artist_data
+        return artist_data
 
     def get_tracks_by_artist(self, artist_name, limit=50):
         """Get tracks by an artist"""
         token = self.get_token()
-        url = f"https://api.spotify.com/v1/artists/{artist_name}/top-tracks?market=US"
+        url = f"https://api.spotify.com/v1/artists/{artist_name}/top-tracks"
         headers = {
             "Authorization": f"Bearer {token}"
         }
-        
         params = {
-            "limit": limit
+            "limit": limit,
+            "market": "US"
         }
 
         response = requests.get(url, headers=headers, params=params)
-        if response.status_code != 200:
+        if response.status_code == 429:
+            retry_after = int(response.headers.get('Retry-After', 1))
+            print(f"Rate limited on get_tracks_by_artist. Retrying after {retry_after} seconds.")
+            time.sleep(retry_after)
+            return self.get_tracks_by_artist(artist_name)
+        elif response.status_code != 200:
             raise Exception(f"Track request failed with status {response.status_code}: {response.text}")
 
-        return response.json()['tracks']
+        return response.json().get('tracks', [])
