@@ -111,7 +111,6 @@
         <div class="nav-right">
             <a href="{{ url_for('home') }}">Home</a>
             <a href="{{ url_for('profile') }}">My Profile</a>
-            <a href="{{ url_for('compare') }}">Compare</a>
             <a href="{{ url_for('share') }}">Share</a>
             <a href="#" onclick="showLogoutConfirmation()">Log Out</a>
                 <div id="logout-confirmation">
@@ -136,7 +135,7 @@
         </div>
     </div>
 
-    <h1>{{ user.username }}'s Detailed Analysis</h1>
+    <h1 class="text_box">{{ user.username }}'s Detailed Analysis</h1>
 
     <div class="stats-box">
         <h2>📊 Stats Overview</h2>

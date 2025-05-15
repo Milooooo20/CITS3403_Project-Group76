@@ -21,7 +21,23 @@ def register_routes(app):
     @app.route('/compare')
     @login_required
     def compare():
-        return render_template('compare.html')
+        user_id2 = request.args.get('userId')
+        
+        user1 = current_user
+        user1_playlist = user1.get_or_create_playlist()
+        user1_songs = user1_playlist.songs.all()
+
+        user2 = User.query.get(user_id2)
+        user2_playlist = user2.get_or_create_playlist()
+        user2_songs = user2_playlist.songs.all()
+
+
+        return render_template('compare.html', 
+                               user1=user1, 
+                               user2=user2,
+                               user1_songs=user1_songs,
+                               user2_songs=user2_songs
+                               )
 
     @app.route('/create_account', methods=['GET', 'POST'])
     def create_account():
