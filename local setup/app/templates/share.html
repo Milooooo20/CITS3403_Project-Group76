@@ -89,7 +89,7 @@
             background-color: rgba(0, 0, 0, 0.35);
         }
         .shared-container {
-            width: 20em;
+            width: 25em;
             height: 25em;
             margin: 2em 1em;
             display: flex;
@@ -126,18 +126,29 @@
             display: none;
         }
         .list-button {
-            background-color: rgba(0, 0, 0, 0);
-            color: white;
-            padding: 0.5em;
             display: block;
             border: 1px solid white;
             border-radius: 10px;
+        }
+        div.list-button {
+            white-space: nowrap;
+        }
+        .shared-list li button {
+            background-color: rgba(0, 0, 0, 0);
+            color: white;
+            padding: 0.5em;
             cursor: pointer;
         }
-        .list-button:hover {
+        .inner-button {
+            border: none;
+        }
+        .inner-button:first-child {
+            border-right: 1px solid white;
+        }
+        .shared-list li button:hover {
             background-color: rgba(255, 255, 255, 0.2);
         }
-        .list-button:active {
+        .shared-list li button:active {
             color: rgb(40, 0, 30);
         }
         .flashes li.error {
@@ -297,18 +308,21 @@
 
             sharedBy.forEach(user => {
                 const $listItem = $(`<li><p>${user.username}</p></li>`);
+                const $buttonsContainer = $('<div class="list-button"></div>');
 
-                // Create a form for the analysis button
-                const $form = $('<form action="/analysis" method="POST"></form>');
-                const $hiddenInput = $(`<input type="hidden" name="userId" value="${user.id}">`);
-                const $analysisButton = $('<button type="submit" class="list-button">Analysis</button>');
+                const $profileButton = $('<button type="button" class="inner-button">Profile</button>');
+                $profileButton.on('click', function () {
+                    window.location.href = `/profile?user_id=${user.id}`;
+                });
+                $buttonsContainer.append($profileButton);
 
-                // Append the hidden input and button to the form
-                $form.append($hiddenInput);
-                $form.append($analysisButton);
-                
-                // Append the form to the list item
-                $listItem.append($form);
+                const $analysisButton = $('<button type="button" class="inner-button">Analysis</button>');
+                $analysisButton.on('click', function () {
+                    window.location.href = `/analysis?user_id=${user.id}`;
+                });
+                $buttonsContainer.append($analysisButton);
+
+                $listItem.append($buttonsContainer);
                 $sharedByList.append($listItem);
             });
             $sharedByHeader.text(`Shared By: ${sharedBy.length}`); // Update header with count
