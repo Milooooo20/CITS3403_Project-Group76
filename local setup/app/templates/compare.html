@@ -36,7 +36,6 @@
             margin: 20px 20px 20px 20px;
             box-sizing: border-box;
             border-radius: 15px;
-            overflow-y: auto;
             }
         .content-box::-webkit-scrollbar {
             display: none;
@@ -107,18 +106,6 @@
             jalign-items: flex-end; /* Aligns text to the right */
             text-align: right;
             width: 100%;
-        }
-        @media (max-width: 650px) {
-            .main-body {
-                display: flex;
-                flex-direction: column;
-                width: 100%;
-                height: 80;
-            }
-            .user {
-                width: auto;
-
-            }
         }
     </style>
 </head>
@@ -199,7 +186,19 @@
                     {% endif %}
                 </div>
             </div>
-            
+            <div class="both">
+                <p>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</p>
+                <h3>Both of you may jam along to these songs:</h3>
+                <p>luther - <i>Kendrick Lamar ft. SZA</i></p>
+                <p>Best Part - <i>Daniel Caesar ft. H.E.R.</i></p>
+                <p>The Boy Is Mine - <i>Brandy & Monica</i></p>
+                <p>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</p>
+                <h3>Fun Fact!</h3>
+                <p>You have listened to songs from the 80s, but User 2 has not.</p>
+                <p>- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</p>
+                <h3>Follow <a href="" style="color: green;"> User 2's Spotify</a> if you haven't already!</h3>
+                
+            </div>
         </div>
         <a href="{{ url_for('share') }}" class="btn">Find Others to Share and Compare</a>  
     </div>

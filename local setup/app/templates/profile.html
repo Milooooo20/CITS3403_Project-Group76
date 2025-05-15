@@ -33,7 +33,7 @@
         .full_bottom {
             background-color: rgba(124, 124, 124, 0.5);
             margin: 30px;
-            padding: 0px 20px 20px 20px;
+            padding-bottom: 20px;
             max-width: 100%;
             width: 100%;
             border-radius: 15px;
@@ -114,10 +114,7 @@
             display: flex;
             justify-content: space-between;
             gap: 30px;
-            height: 231px;
-            overflow-x: auto;
-            overflow-y: auto;
-            scrollbar-width: thin;
+            height: 62%;
         }
 
         .flex-lists > div {
@@ -130,21 +127,6 @@
             padding-bottom: 0.7em;
         }
         
-        @media (max-width: 650px) {
-            .container {
-                flex-direction: column;
-            }
-            .left, .right, .full, .full_bottom {
-                margin: 15px 15px;
-                width: auto;
-
-            }
-            .flex-lists {
-                flex-direction: column;
-                gap: 15px;
-                height: auto;
-            }
-        }
     </style>
 </head>
 <body>
@@ -152,13 +134,11 @@
         <img class="logo" src='../static/assets/logo.png'>
         <div class="nav-right">
             <a href="{{ url_for('home') }}">Home</a>
-
             {% if is_own_profile %}
                 <a href="{{ url_for('profile') }}" class="active">My Profile</a>
             {% else %}
                 <a href="{{ url_for('profile') }}">My Profile</a>
             {% endif %}
-      
             <a href="{{ url_for('share') }}">Share</a>
             <a href="#" onclick="showLogoutConfirmation()">Log Out</a>
                 <div id="logout-confirmation">
@@ -208,13 +188,6 @@
                     <button class="btn" onclick="window.location.href=`{{ url_for('edit_playlist') }}`">Add another song?</button>
                 {% endif %}
                 </div>
-
-                <div class="playlist-actions">
-                {% if is_own_profile %}
-                    <button class="btn" onclick="window.location.href=`{{ url_for('edit_playlist') }}`">Add another song?</button>
-                {% endif %}
-                </div>
-
         </div>
         <div class="right">
             <h2>🎼 Top Genres & Artists</h2>
@@ -298,6 +271,5 @@
             </div>
         {% endif %}
     </div>
-
 </body>
 </html>
