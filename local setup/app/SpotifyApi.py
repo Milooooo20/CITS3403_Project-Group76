@@ -110,13 +110,14 @@ class SpotifyAPI:
         return artist_data
 
     def get_tracks_by_artist(self, artist_name, limit=50):
-        """Get top tracks for a given artist ID"""
+        """Get tracks by an artist"""
         token = self.get_token()
-        url = f"https://api.spotify.com/v1/artists/{artist_id}/top-tracks"
+        url = f"https://api.spotify.com/v1/artists/{artist_name}/top-tracks"
         headers = {
             "Authorization": f"Bearer {token}"
         }
         params = {
+            "limit": limit,
             "market": "US"
         }
 
@@ -125,7 +126,7 @@ class SpotifyAPI:
             retry_after = int(response.headers.get('Retry-After', 1))
             print(f"Rate limited on get_tracks_by_artist. Retrying after {retry_after} seconds.")
             time.sleep(retry_after)
-            return self.get_tracks_by_artist(artist_id)
+            return self.get_tracks_by_artist(artist_name)
         elif response.status_code != 200:
             raise Exception(f"Track request failed with status {response.status_code}: {response.text}")
 
