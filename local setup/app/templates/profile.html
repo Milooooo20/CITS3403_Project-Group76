@@ -134,7 +134,11 @@
         <img class="logo" src='../static/assets/logo.png'>
         <div class="nav-right">
             <a href="{{ url_for('home') }}">Home</a>
-            <a href="{{ url_for('profile') }}" class="active">My Profile</a>
+            {% if is_own_profile %}
+                <a href="{{ url_for('profile') }}" class="active">My Profile</a>
+            {% else %}
+                <a href="{{ url_for('profile') }}">My Profile</a>
+            {% endif %}
             <a href="{{ url_for('share') }}">Share</a>
             <a href="#" onclick="showLogoutConfirmation()">Log Out</a>
                 <div id="logout-confirmation">
@@ -179,9 +183,11 @@
                     <div class="item empty-playlist">Your playlist is empty</div>
                 {% endif %}
                 </div>
-            <div class="playlist-actions">
-                <button class="btn" onclick="window.location.href=`{{ url_for('edit_playlist') }}`">Add another song?</button>
-            </div>
+                <div class="playlist-actions">
+                {% if is_own_profile %}
+                    <button class="btn" onclick="window.location.href=`{{ url_for('edit_playlist') }}`">Add another song?</button>
+                {% endif %}
+                </div>
         </div>
         <div class="right">
             <h2>🎼 Top Genres & Artists</h2>
@@ -207,14 +213,20 @@
                     </ol>
                 </div>
             </div> 
-            <button class="btn" onclick="window.location.href=`{{ url_for('analysis') }}`">Click to see detailed analysis</button>
+            {% if is_own_profile %}
+                <button class="btn" onclick="window.location.href=`{{ url_for('analysis') }}`">Click to see detailed analysis</button>
+            {% endif %}
         </div>
     </div>
 
     <div class="container">
         {% if recommended_song_1 or recommended_song_2 or recommended_song_genre %}
             <div class="full">
-                <h2>Recommended Songs For You!</h2>
+                {% if is_own_profile %}
+                    <h2>Recommended Songs For You!</h2>
+                {% else %}
+                    <h2>Recommended Songs For {{ user.username }}</h2>
+                {% endif %}
                 <div class="scroll-container-horizontal">
                     {% if recommended_song_1 %}
                         <div class="image-card">
@@ -258,11 +270,6 @@
                 </div>
             </div>
         {% endif %}
-    </div>
-    <div class="container">
-        <div class="full_bottom"> 
-            <button class="btn" onclick="window.location.href=`{{ url_for('share') }}`">Like to see how your Playlist compares with others? Click here!</button>
-        </div>
     </div>
 </body>
 </html>

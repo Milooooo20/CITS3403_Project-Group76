@@ -18,27 +18,6 @@ def register_routes(app):
     def home():
         return render_template('home.html', user=current_user)
 
-    @app.route('/compare')
-    @login_required
-    def compare():
-        user_id2 = request.args.get('userId')
-        
-        user1 = current_user
-        user1_playlist = user1.get_or_create_playlist()
-        user1_songs = user1_playlist.songs.all()
-
-        user2 = User.query.get(user_id2)
-        user2_playlist = user2.get_or_create_playlist()
-        user2_songs = user2_playlist.songs.all()
-
-
-        return render_template('compare.html', 
-                               user1=user1, 
-                               user2=user2,
-                               user1_songs=user1_songs,
-                               user2_songs=user2_songs
-                               )
-
     @app.route('/create_account', methods=['GET', 'POST'])
     def create_account():
         if request.method == 'POST':
@@ -190,7 +169,20 @@ def register_routes(app):
     @app.route('/profile')
     @login_required
     def profile():
-        user = current_user
+        user_id = request.args.get('user_id')
+        if user_id:
+            user = User.query.get(user_id)
+            if not user:
+                flash('User not found', 'error')
+                return redirect(url_for('share'))
+            elif user not in current_user.shared_by:
+                flash('You cannot view this user\'s profile', 'error')
+                return redirect(url_for('share'))
+            is_own_profile = False
+        else:
+            user = current_user
+            is_own_profile = True
+        
         user_playlist = user.get_or_create_playlist()
         songs = user_playlist.songs.all()
 
@@ -218,7 +210,7 @@ def register_routes(app):
         # Get top 3
         top_genres = [genre for genre, _ in genre_counts.most_common(3)]
         top_artists = [artist for artist, _ in artist_counts.most_common(3)]
-
+        
         if len(all_artists) >= 2:
             random_artists = random.sample(all_artists, 2)
         else:
@@ -281,14 +273,15 @@ def register_routes(app):
                             top_artists=top_artists,
                             recommended_song_1=recommendations[0],
                             recommended_song_2=recommendations[1],
-                            recommended_song_genre=genre_recommendation)
+                            recommended_song_genre=genre_recommendation,
+                            is_own_profile=is_own_profile)
 
 
-    @app.route('/analysis', methods=['GET', 'POST'])
+    @app.route('/analysis')
     @login_required
     def analysis():
-        if request.method == 'POST':
-            user_id = request.form.get('userId')
+        user_id = request.args.get('user_id')
+        if user_id:
             user = User.query.get(user_id)
             if not user:
                 flash('User not found', 'error')
@@ -299,7 +292,7 @@ def register_routes(app):
         else:
             user = current_user
         
-        user_playlist = current_user.get_or_create_playlist()
+        user_playlist = user.get_or_create_playlist()
         songs = user_playlist.songs.all()
 
         total_duration = 0  # To accumulate the total song length in milliseconds
