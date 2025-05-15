@@ -174,7 +174,20 @@ def register_routes(app):
     @app.route('/profile')
     @login_required
     def profile():
-        user = current_user
+        user_id = request.args.get('user_id')
+        if user_id:
+            user = User.query.get(user_id)
+            if not user:
+                flash('User not found', 'error')
+                return redirect(url_for('share'))
+            elif user not in current_user.shared_by:
+                flash('You cannot view this user\'s profile', 'error')
+                return redirect(url_for('share'))
+            is_own_profile = False
+        else:
+            user = current_user
+            is_own_profile = True
+        
         user_playlist = user.get_or_create_playlist()
         songs = user_playlist.songs.all()
 
@@ -265,14 +278,15 @@ def register_routes(app):
                             top_artists=top_artists,
                             recommended_song_1=recommendations[0],
                             recommended_song_2=recommendations[1],
-                            recommended_song_genre=genre_recommendation)
+                            recommended_song_genre=genre_recommendation,
+                            is_own_profile=is_own_profile)
 
 
-    @app.route('/analysis', methods=['GET', 'POST'])
+    @app.route('/analysis')
     @login_required
     def analysis():
-        if request.method == 'POST':
-            user_id = request.form.get('userId')
+        user_id = request.args.get('user_id')
+        if user_id:
             user = User.query.get(user_id)
             if not user:
                 flash('User not found', 'error')
@@ -283,7 +297,7 @@ def register_routes(app):
         else:
             user = current_user
         
-        user_playlist = current_user.get_or_create_playlist()
+        user_playlist = user.get_or_create_playlist()
         songs = user_playlist.songs.all()
 
         total_duration = 0  # To accumulate the total song length in milliseconds
