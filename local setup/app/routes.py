@@ -18,11 +18,6 @@ def register_routes(app):
     def home():
         return render_template('home.html', user=current_user)
 
-    @app.route('/compare')
-    @login_required
-    def compare():
-        return render_template('compare.html')
-
     @app.route('/create_account', methods=['GET', 'POST'])
     def create_account():
         if request.method == 'POST':
@@ -216,6 +211,14 @@ def register_routes(app):
         top_genres = [genre for genre, _ in genre_counts.most_common(3)]
         top_artists = [artist for artist, _ in artist_counts.most_common(3)]
 
+        if not is_own_profile:
+            return render_template('profile.html',
+                            user=user,
+                            songs=songs,
+                            top_genres=top_genres,
+                            top_artists=top_artists,
+                            is_own_profile=is_own_profile)
+        
         if len(all_artists) >= 2:
             random_artists = random.sample(all_artists, 2)
         else:
