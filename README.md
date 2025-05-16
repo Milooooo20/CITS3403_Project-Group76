@@ -24,5 +24,6 @@ Click the link to the website to fully launch the application, you can use "ctrl
 
 ## Instructions for Test Running
 To run the provided unit tests, ensure you are in the 'local setup' directory, and run the following: "python -m unittest tests.unitTests -v".
-To run the system test, ensure you have installed the selenium package in your virtual environment, and then run the following: "python -m unittest tests.systemTests -v".
+
+To run the system test, ensure you have installed the selenium package in your virtual environment. You need to have the app running on Google Chrome (follow instructions for launching the application) first, and then on a new/separate terminal (in the 'local setup' directory with the virtual environment activated) run the following: "python -m unittest tests.systemTests -v".
 
