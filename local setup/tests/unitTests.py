@@ -38,9 +38,6 @@ class UnitTests(unittest.TestCase):
         self.assertEqual(signing_up('invalid_user', 'user3@example.com', 'pwd', 'pwd'), "same_credential: redirect(url_for('main.create_account'))", "User cannot sign up with the same username or email")
         self.assertEqual(signing_up('iclumsy_user', 'user3@example.com', 'pwd', 'pwd4'), "confirm_pw: redirect(url_for('main.create_account'))", "User must make sure to correctly confirm their password")
 
-    def user_exists(self, username, email):
-        pass
-
     def tearDown(self):
         db.session.remove()
         db.drop_all()
