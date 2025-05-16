@@ -6,6 +6,9 @@
     <link rel="stylesheet" href="../static/css/nav_bar.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        .content {
+            padding: 1em;
+        }
         .stats-box {
             background-color: rgba(255, 255, 255, 0.05);
             padding: 20px;
@@ -135,55 +138,57 @@
         </div>
     </div>
 
-    <h1 class="text_box">{{ user.username }}'s Detailed Analysis</h1>
+    <div class="content">
+        <h1 class="text_box">{{ user.username }}'s Detailed Analysis</h1>
 
-    <div class="stats-box">
-        <h2>📊 Stats Overview</h2>
-        <p class="stat"><strong>🎶 Average Song Length: </strong>{{ avg_duration }}</p>
-        <p class="stat"><strong>⏱️ Longest Song: </strong>{{ longest_song_length }}</p>
-        <p class="stat"><strong>⏳ Total Playlist Duration: </strong>{{ total_duration }}</p>
-        <p class="stat"><strong>💿 Total Number of Songs: </strong>{{ num_songs }}</p>
-    </div>
-
-    <div class="chart-container">
-        <h2>🎤 Songs per Artist</h2>
-        <div class="chart-scrollable">
-            <canvas id="artistChart"></canvas>
+        <div class="stats-box">
+            <h2>📊 Stats Overview</h2>
+            <p class="stat"><strong>🎶 Average Song Length: </strong>{{ avg_duration }}</p>
+            <p class="stat"><strong>⏱️ Longest Song: </strong>{{ longest_song_length }}</p>
+            <p class="stat"><strong>⏳ Total Playlist Duration: </strong>{{ total_duration }}</p>
+            <p class="stat"><strong>💿 Total Number of Songs: </strong>{{ num_songs }}</p>
         </div>
-    </div>
 
-    <div class="chart-container">
-        <h2>🎤 Song Duration per Artist</h2>
-        <canvas id="artistDurationChart"></canvas>
-    </div>
-
-    <div class="chart-container">
-        <h2>🎵 Songs per Genre</h2>
-        <div class="chart-scrollable">
-            <canvas id="genreChart"></canvas>
+        <div class="chart-container">
+            <h2>🎤 Songs per Artist</h2>
+            <div class="chart-scrollable">
+                <canvas id="artistChart"></canvas>
+            </div>
         </div>
-    </div>
 
-    <div class="chart-container">
-        <h2>🎵 Duration per Genre</h2>
-        <canvas id="genreDurationChart"></canvas>
-    </div>
-
-    <!-- Modal for displaying songs in a genre -->
-    <div id="genreModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2 id="modalGenreTitle">Songs in Genre</h2>
-            <ul id="modalSongList"></ul>
+        <div class="chart-container">
+            <h2>🎤 Song Duration per Artist</h2>
+            <canvas id="artistDurationChart"></canvas>
         </div>
-    </div>
 
-    <!-- Modal for displaying details of "Other" category -->
-    <div id="otherModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <span class="close" onclick="closeOtherModal()">&times;</span>
-            <h2 id="modalOtherTitle">Details for "Other"</h2>
-            <ul id="otherDetailsList"></ul>
+        <div class="chart-container">
+            <h2>🎵 Songs per Genre</h2>
+            <div class="chart-scrollable">
+                <canvas id="genreChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <h2>🎵 Duration per Genre</h2>
+            <canvas id="genreDurationChart"></canvas>
+        </div>
+
+        <!-- Modal for displaying songs in a genre -->
+        <div id="genreModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h2 id="modalGenreTitle">Songs in Genre</h2>
+                <ul id="modalSongList"></ul>
+            </div>
+        </div>
+
+        <!-- Modal for displaying details of "Other" category -->
+        <div id="otherModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close" onclick="closeOtherModal()">&times;</span>
+                <h2 id="modalOtherTitle">Details for "Other"</h2>
+                <ul id="otherDetailsList"></ul>
+            </div>
         </div>
     </div>
 

@@ -9,20 +9,20 @@
         }
         .left {
             flex: 1; 
-            background-color: rgba(124, 124, 124, 0.5);
+            background-color: rgba(0,0,0,0.35);
             margin: 30px;
             padding: 20px;
             border-radius: 15px;
         }
         .right {
             flex: 2; 
-            background-color: rgba(124, 124, 124, 0.5);
+            background-color: rgba(0,0,0,0.35);
             margin: 30px;
             padding: 20px;
             border-radius: 15px;
         }
         .full {
-            background-color: rgba(124, 124, 124, 0.5);
+            background-color: rgba(0,0,0,0.35);
             margin: 30px;
             padding: 20px;
             max-width: 100%;
@@ -31,7 +31,7 @@
             overflow-x: hidden;
         }
         .full_bottom {
-            background-color: rgba(124, 124, 124, 0.5);
+            background-color: rgba(0,0,0,0.35);
             margin: 30px;
             padding: 0px 20px 20px 20px;
             max-width: 100%;
@@ -56,9 +56,9 @@
         .item {
             margin: 10px 0;
             padding: 10px;
-            background: #f0f0f0;
+            background-image: linear-gradient(240deg, rgb(0, 0, 99), rgb(109, 0, 0));
             border-radius: 5px;
-            color: black;
+            color: rgb(255, 255, 255);
         }
         .song-title {
             font-size: larger;
@@ -66,6 +66,24 @@
         }
         .song-artist {
             font-style: italic;
+        }
+        .song-item {
+            display: flex;
+            align-items: center;
+            gap: 12px; /* space between image and text */
+        }
+        .song-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 3px;
+        }
+        .song-info {
+            display: flex;
+            flex-direction: column;
+            jalign-items: flex-end; /* Aligns text to the right */
+            text-align: right;
+            width: 100%;
         }
         .scroll-container-horizontal {
             width: 100%;
@@ -189,15 +207,22 @@
 
     <div class="container">
         <div class="left">
-            <h2>Playlist</h2>
+            {% if is_own_profile %}
+                <h2>Your Playlist</h2>
+            {% else %}
+                <h2>{{ user.username }}'s Playlist</h2>
+            {% endif %}
                 <div class="scroll-container-vertical" id="playlist-container">
                 {% if songs %}
                     {% for song in songs %}
+                    
                     <div class="item song-item" data-id="{{ song.id }}">
-                        <span class="song-title">{{ song.title }}</span>
-                        <br>
-                        <span class="song-artist">{{ song.artist }}</span>
-                    </div>
+                            <img class="art" src="{{ song.album_art }}" alt="{{ song.title }}">
+                            <div class="song-info">
+                                <span class="song-title">{{ song.title }}</span>
+                                <span class="song-artist">{{ song.artist }}</span>
+                            </div>
+                        </div>
                     {% endfor %}
                 {% else %}
                     <div class="item empty-playlist">Your playlist is empty</div>
