@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, flash, url_for, jsonify
+from flask import app, render_template, request, redirect, flash, url_for, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from app import db
 from app.models import User, Playlist, Song
