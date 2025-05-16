@@ -6,6 +6,7 @@ from app.SpotifyApi import SpotifyAPI
 from collections import Counter
 from collections import defaultdict
 import random
+from flask_wtf.csrf import generate_csrf
 
 ### HARDCODED CREDENTIALS FOR TESTING ONLY THESE BEING HERE IS A SECURITY RISK AND SHOULD BE FIXED BEFORE FINAL SUBMISSION
 spotify_api = SpotifyAPI(
@@ -43,10 +44,12 @@ def register_routes(app):
             db.session.add(playlist)
             db.session.commit()
 
+            
             flash('Account created successfully. Please sign in.', 'success')
             return redirect(url_for('sign_in'))
 
-        return render_template('create_account.html')
+        csrf_token = generate_csrf()
+        return render_template('create_account.html', csrf_token=csrf_token)
 
     @app.route('/edit_playlist')
     @login_required
@@ -409,7 +412,8 @@ def register_routes(app):
             
             return jsonify({'success': True}), 200
         
-        return render_template('share.html')
+        csrf_token = generate_csrf()
+        return render_template('share.html', csrf_token=csrf_token)
 
     @app.route('/search_users/<username>')
     @login_required
@@ -434,6 +438,7 @@ def register_routes(app):
             current_user.shared_with.remove(user)
             db.session.commit()
         
+        
         return jsonify({'success': True}), 200
     
     @app.route('/sign_in', methods=['GET', 'POST'])
@@ -450,7 +455,8 @@ def register_routes(app):
             flash('Invalid username or password', 'error')
             return redirect(url_for('sign_in'))
 
-        return render_template('sign_in.html')
+        csrf_token = generate_csrf()
+        return render_template('sign_in.html', csrf_token=csrf_token)
 
     @app.route('/logout')
     @login_required
@@ -458,4 +464,3 @@ def register_routes(app):
         logout_user()
         flash('You have been logged out.', 'info')
         return redirect(url_for('sign_in'))
-
