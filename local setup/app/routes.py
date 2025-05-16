@@ -420,6 +420,7 @@ def share():
 @blueprint.route('/search_users')
 @login_required
 def search_users():
+    username = request.args.get('username','')
     matching_users = User.query.filter(User.username.ilike(f"%{username}%")).all()
     return jsonify([{'id': user.id, 'username': user.username} for user in matching_users])
 
@@ -433,7 +434,6 @@ def get_shared_users():
 @blueprint.route('/unshare/<int:user_id>', methods=['DELETE'])
 @login_required
 def unshare(user_id):
-    user_id = request.form.get('userId')
     user = User.query.get_or_404(user_id)
     
     if user in current_user.shared_with:
@@ -465,4 +465,3 @@ def logout():
     logout_user()
     flash('You have been logged out.', 'info')
     return redirect(url_for('main.sign_in'))
-
