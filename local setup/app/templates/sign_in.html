@@ -6,12 +6,10 @@
     <style>
         .box {
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-
-            height: calc(100vh - 120px);
-            margin: 0px;
+            min-height: calc(100vh - 120px);
+            margin: 0;
             font-family: Arial, sans-serif;
         }
         .container {
@@ -22,7 +20,6 @@
             border: 3px solid #ffffff;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(151, 151, 151, 0.7);
-            overflow-y: auto;
         }
         form {
             display: flex;
@@ -111,6 +108,8 @@
                 {% endif %}
             {% endwith %}
             <form action="{{ url_for('sign_in') }}" method="post">
+                <input type = "hidden" name="csrf_token" value="{{ csrf_token }}">
+                
                 <label for="username">Username:</label><br>
                 <input type="text" id="username" name="username" required><br>
 
