@@ -415,9 +415,10 @@ def register_routes(app):
         csrf_token = generate_csrf()
         return render_template('share.html', csrf_token=csrf_token)
 
-    @app.route('/search_users/<username>')
+    @app.route('/search_users')
     @login_required
-    def search_users(username):
+    def search_users():
+        username = request.args.get('username', '')
         matching_users = User.query.filter(User.username.ilike(f"%{username}%")).all()
         return jsonify([{'id': user.id, 'username': user.username} for user in matching_users])
 
@@ -428,10 +429,9 @@ def register_routes(app):
         shared_by = [{'id': user.id, 'username': user.username} for user in current_user.shared_by]
         return jsonify({'shared_with': shared_with, 'shared_by': shared_by})
 
-    @app.route('/unshare', methods=['POST'])
+    @app.route('/unshare/<int:user_id>', methods=['DELETE'])
     @login_required
-    def unshare():
-        user_id = request.form.get('userId')
+    def unshare(user_id):
         user = User.query.get_or_404(user_id)
         
         if user in current_user.shared_with:
