@@ -256,9 +256,6 @@
         
         // Function to handle the search input with debouncing
         $('#userSearch').on('input', function () {
-
-            $('#shareButton').css('visibility', 'hidden'); // Hide share button on any input change
-            
             const username = $(this).val();
 
             clearTimeout(debounceTimer); // Clear the previous timer
@@ -414,7 +411,6 @@
                 });
             }
             $('#shareButton').css('visibility', 'hidden'); // Hide the button after sharing
-            $('#userSearch').val(''); // Clear the search input
         });
 
     </script>
