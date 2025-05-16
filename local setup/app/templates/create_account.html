@@ -89,8 +89,11 @@
         .flashes li.info {
             color: blue;
         }
-        a {
-            color: green;
+        .log_in {
+            color: rgb(199, 0, 17);
+        }
+        .log_in:hover {
+            color: rgb(214, 91, 101);
         }
     </style>
 </head>
@@ -135,7 +138,7 @@
 
                 <input type="submit" value="Create Account">
             </form>
-            <p>Already have an account? <a href="{{ url_for('main.sign_in') }}">Log In</a></p>
+            <p>Already have an account? <a class='log_in' href="{{ url_for('main.sign_in') }}">Log In</a></p>
         </div>
     </div>
 </body>
