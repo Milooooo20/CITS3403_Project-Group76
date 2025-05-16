@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
     <title>Share</title>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    
     <meta name="viewport" content="width=device-width, initial-scale=0.7">
     <link rel="stylesheet" href="../static/css/nav_bar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -249,6 +251,9 @@
     <script>
         let debounceTimer;
 
+        // Get CSRF token from the meta tag
+        const csrfToken = $('meta[name="csrf-token"]').attr('content');
+        
         // Function to handle the search input with debouncing
         $('#userSearch').on('input', function () {
             const username = $(this).val();
@@ -366,6 +371,9 @@
             $.ajax({
                 url: `/unshare`,
                 method: 'POST',
+                headers: {
+                'X-CSRFToken': csrfToken 
+                },
                 data: { userId: userId },
                 success: function () {
                     fetchSharedUsers();
@@ -389,6 +397,9 @@
                 $.ajax({
                     url: '/share',
                     method: 'POST',
+                    headers: {
+                    'X-CSRFToken': csrfToken
+                    },
                     data: { userId: userId },
                     success: function () {
                         fetchSharedUsers(); // Refresh the shared lists
