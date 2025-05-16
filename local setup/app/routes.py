@@ -7,6 +7,7 @@ from collections import Counter
 from collections import defaultdict
 import random
 from app.blueprints import blueprint
+from flask_wtf.csrf import generate_csrf
 
 ### HARDCODED CREDENTIALS FOR TESTING ONLY THESE BEING HERE IS A SECURITY RISK AND SHOULD BE FIXED BEFORE FINAL SUBMISSION
 spotify_api = SpotifyAPI(
@@ -45,7 +46,8 @@ def create_account():
         flash('Account created successfully. Please sign in.', 'success')
         return redirect(url_for('main.sign_in'))
 
-    return render_template('create_account.html')
+    csrf_token = generate_csrf()
+    return render_template('create_account.html', csrf_token=csrf_token)
 
 @blueprint.route('/edit_playlist')
 @login_required
@@ -53,6 +55,7 @@ def edit_playlist():
     user_playlist = current_user.get_or_create_playlist()
     songs = user_playlist.songs.all()
     return render_template('edit_playlist.html', songs=songs)
+
 
 @blueprint.route('/search_songs')
 @login_required
@@ -265,6 +268,7 @@ def profile():
                                 genre_recommendation = track
                                 break
 
+
     return render_template('profile.html',
                         user=user,
                         songs=songs,
@@ -406,13 +410,16 @@ def share():
             current_user.shared_with.append(user)
             db.session.commit()
         
+        
         return jsonify({'success': True}), 200
+      
+    csrf_token = generate_csrf()
+    return render_template('share.html', csrf_token=csrf_token)
     
-    return render_template('share.html')
 
-@blueprint.route('/search_users/<username>')
+@blueprint.route('/search_users')
 @login_required
-def search_users(username):
+def search_users():
     matching_users = User.query.filter(User.username.ilike(f"%{username}%")).all()
     return jsonify([{'id': user.id, 'username': user.username} for user in matching_users])
 
@@ -423,9 +430,9 @@ def get_shared_users():
     shared_by = [{'id': user.id, 'username': user.username} for user in current_user.shared_by]
     return jsonify({'shared_with': shared_with, 'shared_by': shared_by})
 
-@blueprint.route('/unshare', methods=['POST'])
+@blueprint.route('/unshare/<int:user_id>', methods=['DELETE'])
 @login_required
-def unshare():
+def unshare(user_id):
     user_id = request.form.get('userId')
     user = User.query.get_or_404(user_id)
     
@@ -449,7 +456,8 @@ def sign_in():
         flash('Invalid username or password', 'error')
         return redirect(url_for('main.sign_in'))
 
-    return render_template('sign_in.html')
+    csrf_token = generate_csrf()
+    return render_template('sign_in.html', csrf_token=csrf_token)
 
 @blueprint.route('/logout')
 @login_required
@@ -457,3 +465,4 @@ def logout():
     logout_user()
     flash('You have been logged out.', 'info')
     return redirect(url_for('main.sign_in'))
+

@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
     <title>Share</title>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    
     <meta name="viewport" content="width=device-width, initial-scale=0.7">
     <link rel="stylesheet" href="../static/css/nav_bar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -249,8 +251,14 @@
     <script>
         let debounceTimer;
 
+        // Get CSRF token from the meta tag
+        const csrfToken = $('meta[name="csrf-token"]').attr('content');
+        
         // Function to handle the search input with debouncing
         $('#userSearch').on('input', function () {
+
+            $('#shareButton').css('visibility', 'hidden'); // Hide share button on any input change
+            
             const username = $(this).val();
 
             clearTimeout(debounceTimer); // Clear the previous timer
@@ -267,7 +275,7 @@
             }
 
             $.ajax({
-                url: `/search_users/${username}`,
+                url: `/search_users?username=${username}`,
                 method: 'GET',
                 success: function (data) {
                     displaySearchResults(data, $resultsContainer);
@@ -364,9 +372,11 @@
         // Unshare a user
         function unshareUser(userId) {
             $.ajax({
-                url: `/unshare`,
-                method: 'POST',
-                data: { userId: userId },
+                url: `/unshare/${userId}`,
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': csrfToken 
+                },
                 success: function () {
                     fetchSharedUsers();
                     alert('No longer share with user?');
@@ -389,6 +399,9 @@
                 $.ajax({
                     url: '/share',
                     method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken
+                    },
                     data: { userId: userId },
                     success: function () {
                         fetchSharedUsers(); // Refresh the shared lists
@@ -400,6 +413,7 @@
                 });
             }
             $('#shareButton').css('visibility', 'hidden'); // Hide the button after sharing
+            $('#userSearch').val(''); // Clear the search input
         });
 
     </script>
