@@ -275,7 +275,7 @@
             }
 
             $.ajax({
-                url: `/search_users/${username}`,
+                url: `/search_users?username=${username}`,
                 method: 'GET',
                 success: function (data) {
                     displaySearchResults(data, $resultsContainer);
@@ -372,12 +372,11 @@
         // Unshare a user
         function unshareUser(userId) {
             $.ajax({
-                url: `/unshare`,
-                method: 'POST',
+                url: `/unshare/${userId}`,
+                method: 'DELETE',
                 headers: {
-                'X-CSRFToken': csrfToken 
+                    'X-CSRFToken': csrfToken 
                 },
-                data: { userId: userId },
                 success: function () {
                     fetchSharedUsers();
                     alert('No longer share with user?');
@@ -401,7 +400,7 @@
                     url: '/share',
                     method: 'POST',
                     headers: {
-                    'X-CSRFToken': csrfToken
+                        'X-CSRFToken': csrfToken
                     },
                     data: { userId: userId },
                     success: function () {
