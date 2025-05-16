@@ -88,10 +88,10 @@
     <div class="navbar">
         <img class="logo" src='../static/assets/logo.png'>
         <div class="nav-right">
-            <a href="{{ url_for('home') }}">Home</a>
-            <a href="{{ url_for('profile') }}">My Profile</a>
-            <a href="{{ url_for('share') }}">Share</a>
-            <a href="{{ url_for('sign_in') }}" class="active">Log In</a>
+            <a href="{{ url_for('main.home') }}">Home</a>
+            <a href="{{ url_for('main.profile') }}">My Profile</a>
+            <a href="{{ url_for('main.share') }}">Share</a>
+            <a href="{{ url_for('main.sign_in') }}" class="active">Log In</a>
         </div>
     </div>
 
@@ -110,7 +110,7 @@
                     </ul>
                 {% endif %}
             {% endwith %}
-            <form action="{{ url_for('sign_in') }}" method="post">
+            <form action="{{ url_for('main.sign_in') }}" method="post">
                 <label for="username">Username:</label><br>
                 <input type="text" id="username" name="username" required><br>
 
@@ -120,7 +120,7 @@
                 <input type="submit" value="Submit">
             </form>
             <br>
-            <p>Don't have a R-echo account?</p><a class="sign_up" href="{{ url_for('create_account') }}">Create one for free!</a>
+            <p>Don't have a R-echo account?</p><a class="sign_up" href="{{ url_for('main.create_account') }}">Create one for free!</a>
         </div>
     </div>
 </body>
