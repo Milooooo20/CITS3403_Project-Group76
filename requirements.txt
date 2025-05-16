@@ -5,3 +5,4 @@ Flask-WTF==1.2.2
 requests==2.32.3
 SQLAlchemy==2.0.40
 Werkzeug==3.0.4
+selenium==4.32.0
